@@ -1792,13 +1792,13 @@ elif st.session_state.active_page in ["Research & SOTA", "Research & Architectur
         </div>
 
         <div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: center;">
-            <a href="https://github.com/0xxay/ppflids" target="_blank" style="background: #facc15; color: #0f172a; text-decoration: none; font-weight: 800; font-size: 14px; padding: 12px 28px; border-radius: 50px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(250,204,21,0.4);">
+            <a href="https://github.com/0xxay/AEGIS-FL" target="_blank" style="background: #facc15; color: #0f172a; text-decoration: none; font-weight: 800; font-size: 14px; padding: 12px 28px; border-radius: 50px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(250,204,21,0.4);">
                 <span>&#128187;</span> Open GitHub Repository
             </a>
-            <a href="https://github.com/0xxay/ppflids#readme" target="_blank" style="background: rgba(255,255,255,0.15); color: #ffffff; text-decoration: none; font-weight: 700; font-size: 14px; padding: 12px 28px; border-radius: 50px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,0.25);">
+            <a href="https://github.com/0xxay/AEGIS-FL#readme" target="_blank" style="background: rgba(255,255,255,0.15); color: #ffffff; text-decoration: none; font-weight: 700; font-size: 14px; padding: 12px 28px; border-radius: 50px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,0.25);">
                 <span>&#128196;</span> Read Architecture Whitepaper
             </a>
-            <a href="https://github.com/0xxay/ppflids/issues/new" target="_blank" style="background: rgba(255,255,255,0.1); color: #facc15; text-decoration: none; font-weight: 700; font-size: 14px; padding: 12px 24px; border-radius: 50px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(250,204,21,0.3);">
+            <a href="https://github.com/0xxay/AEGIS-FL/issues/new" target="_blank" style="background: rgba(255,255,255,0.1); color: #facc15; text-decoration: none; font-weight: 700; font-size: 14px; padding: 12px 24px; border-radius: 50px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(250,204,21,0.3);">
                 <span>&#9889;</span> Submit Research Input / RFC
             </a>
             <span style="font-size: 13px; color: #94a3b8; margin-left: 8px;">

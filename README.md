@@ -10,7 +10,7 @@
 [![Benchmark Accuracy](https://img.shields.io/badge/Accuracy-91.93%25-brightgreen.svg)]()
 [![Benchmark Precision](https://img.shields.io/badge/Precision-91.99%25-brightgreen.svg)]()
 [![Contributions Welcome](https://img.shields.io/badge/Contributions-Welcome-orange.svg)](CONTRIBUTING.md)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/0xxay/ppflids/pulls)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/0xxay/AEGIS-FL/pulls)
 
 ---
 
@@ -24,7 +24,7 @@
 > - 📊 **Add flow datasets** (IoT, 5G, SCADA, or custom PCAP telemetry)
 > - 💻 **Improve the UI/UX & documentation** (Streamlit dashboard, Docker configs, documentation)
 > 
-> Check out the [Contributing Guidelines](CONTRIBUTING.md) or open an [RFC / Feature Discussion](https://github.com/0xxay/ppflids/issues/new/choose) to get involved!
+> Check out the [Contributing Guidelines](CONTRIBUTING.md) or open an [RFC / Feature Discussion](https://github.com/0xxay/AEGIS-FL/issues/new/choose) to get involved!
 
 ---
 
