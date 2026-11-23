@@ -1757,11 +1757,11 @@ elif st.session_state.active_page in ["Research & SOTA", "Research & Architectur
         </div>
         
         <h2 style="font-size: 28px !important; font-weight: 900 !important; color: #ffffff !important; line-height: 1.35 !important; margin: 0 0 20px 0 !important; letter-spacing: -0.03em !important;">
-            <strong>I would like to make this project public and open-source so that researchers, cybersecurity analysts, and academic institutions worldwide can review our architecture, conduct independent peer security audits, reproduce the benchmarks, and contribute their novel techniques and input.</strong>
+            <strong>Hey everyone! I'm actively working on this project, and I would love to add your contributions, ideas, and input into it!</strong>
         </h2>
         
         <p style="font-size: 16px; color: #cbd5e1; line-height: 1.75; max-width: 950px; margin-bottom: 32px;">
-            Cyber defense cannot rely on proprietary obscurity or vendor monopolization. By making <strong>AEGIS-FL / PPFL-IDS</strong> open to the international research collective, we invite rigorous peer critique of our cryptographic proofs, red-team auditing of our Byzantine defenses, and collective benchmarking on novel 5G/IoT flow datasets.
+            I am developing <strong>AEGIS-FL™ (PPFL-IDS)</strong> as a fully open-source, privacy-preserving cyber defense framework so that researchers, cybersecurity analysts, engineers, and academic institutions worldwide can review our architecture, run reproducible benchmarks, test novel Byzantine defenses, and contribute their expertise. All pull requests, algorithm proposals, and security audits are warmly welcomed!
         </p>
 
         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 32px;">
