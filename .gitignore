@@ -1,0 +1,25 @@
+# Virtual Environment
+venv/
+env/
+ENV/
+.env
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Temporary files
+*.tmp
+*.log
+.temp_skills/
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

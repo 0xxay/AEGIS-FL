@@ -1,0 +1,59 @@
+[
+  {
+    "round": 1,
+    "timestamp": "2026-11-22T16:00:25.046743Z",
+    "prev_block_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "weights_digest": "7e3e68e2bcabe11d5e3824e25c4701e8c3122a7d3ad0e1409cf3aef602c8bdba",
+    "defense_strategy": "cosine_similarity",
+    "accepted_clients": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "flagged_clients": [],
+    "accuracy": 0.7871111111111111,
+    "f1": 0.7889075700694576,
+    "loss": 0.5471505224704742,
+    "block_hash": "d7fe832fe8e2393f5ea8691e3e93f68ed823e29e2be8b7099fd35b1a90230979"
+  },
+  {
+    "round": 2,
+    "timestamp": "2026-11-22T16:00:27.729856Z",
+    "prev_block_hash": "d7fe832fe8e2393f5ea8691e3e93f68ed823e29e2be8b7099fd35b1a90230979",
+    "weights_digest": "6bce340adb66ae8e206c0357570cfc46ed2aeb53118b9b6845e49655294eb33b",
+    "defense_strategy": "cosine_similarity",
+    "accepted_clients": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "flagged_clients": [],
+    "accuracy": 0.9,
+    "f1": 0.8999234197694176,
+    "loss": 0.45528510875172085,
+    "block_hash": "4347245c7ebf4f752d01c03397ca35e87881e9b89dea842e45d283e8e49cfd3d"
+  },
+  {
+    "round": 3,
+    "timestamp": "2026-11-22T16:00:31.249513Z",
+    "prev_block_hash": "4347245c7ebf4f752d01c03397ca35e87881e9b89dea842e45d283e8e49cfd3d",
+    "weights_digest": "7b28c756bfbb8f738a9d98bdabb1a40489518d383909b0d926e889797f0f1c1c",
+    "defense_strategy": "cosine_similarity",
+    "accepted_clients": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "flagged_clients": [],
+    "accuracy": 0.9135555555555556,
+    "f1": 0.9138060704247762,
+    "loss": 0.43079475396209294,
+    "block_hash": "912b2ec4031d987860cab630f3e99d53b820a3a3706d825a6fa92feef67253f9"
+  }
+]

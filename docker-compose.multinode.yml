@@ -1,0 +1,97 @@
+services:
+  federated-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ppflids_server_multinode
+    command: python -m src.federated_runner --dataset unsw --rounds 5 --defense norm_clipping
+    volumes:
+      - ./data:/app/data
+      - ./results:/app/results
+    networks:
+      - fednet
+
+  client-bank:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ppflids_client_bank
+    command: python -c "print('Client 1 (Bank) SuperNode container active and listening on fednet.')"
+    volumes:
+      - ./data/clients/unsw:/app/data/clients/unsw
+    depends_on:
+      - federated-server
+    networks:
+      - fednet
+
+  client-hospital:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ppflids_client_hospital
+    command: python -c "print('Client 2 (Hospital) SuperNode container active and listening on fednet.')"
+    volumes:
+      - ./data/clients/unsw:/app/data/clients/unsw
+    depends_on:
+      - federated-server
+    networks:
+      - fednet
+
+  client-enterprise:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ppflids_client_enterprise
+    command: python -c "print('Client 3 (Enterprise) SuperNode container active and listening on fednet.')"
+    volumes:
+      - ./data/clients/unsw:/app/data/clients/unsw
+    depends_on:
+      - federated-server
+    networks:
+      - fednet
+
+  client-government:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ppflids_client_gov
+    command: python -c "print('Client 4 (Government) SuperNode container active and listening on fednet.')"
+    volumes:
+      - ./data/clients/unsw:/app/data/clients/unsw
+    depends_on:
+      - federated-server
+    networks:
+      - fednet
+
+  client-cloud:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ppflids_client_cloud
+    command: python -c "print('Client 5 (Cloud Provider) SuperNode container active and listening on fednet.')"
+    volumes:
+      - ./data/clients/unsw:/app/data/clients/unsw
+    depends_on:
+      - federated-server
+    networks:
+      - fednet
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ppflids_dashboard_multinode
+    command: streamlit run dashboard/app.py --server.port=8501 --server.address=0.0.0.0
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./results:/app/results
+    depends_on:
+      - federated-server
+    networks:
+      - fednet
+
+networks:
+  fednet:
+    driver: bridge

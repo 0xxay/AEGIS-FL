@@ -1,0 +1,32 @@
+services:
+  federated-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ppflids_server
+    command: python -m src.federated_runner --dataset unsw --rounds 5 --defense norm_clipping
+    volumes:
+      - ./data:/app/data
+      - ./results:/app/results
+    networks:
+      - fednet
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ppflids_dashboard
+    command: streamlit run dashboard/app.py --server.port=8501 --server.address=0.0.0.0
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./results:/app/results
+    depends_on:
+      - federated-server
+    networks:
+      - fednet
+
+networks:
+  fednet:
+    driver: bridge
