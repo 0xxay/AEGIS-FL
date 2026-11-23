@@ -1,4 +1,4 @@
 round,dataset,accuracy,precision,recall,f1,loss,epsilon,rdp_epsilon,dp_enabled,secagg_enabled,attack_type,compromised_client,defense_strategy,flagged_clients,audit_hash,elapsed_seconds
-1,UNSW,0.7871,0.8238,0.7871,0.7889,0.5472,295.970518,411.512925,True,True,none,-1,cosine_similarity,None,d7fe832fe8e2393f5ea8691e3e93f68ed823e29e2be8b7099fd35b1a90230979,0.22
-2,UNSW,0.9,0.8999,0.9,0.8999,0.4553,535.722808,811.512925,True,True,none,-1,cosine_similarity,None,4347245c7ebf4f752d01c03397ca35e87881e9b89dea842e45d283e8e49cfd3d,0.13
-3,UNSW,0.9136,0.9145,0.9136,0.9138,0.4308,766.225814,1211.512925,True,True,none,-1,cosine_similarity,None,912b2ec4031d987860cab630f3e99d53b820a3a3706d825a6fa92feef67253f9,0.14
+1,UNSW,0.8811,0.8823,0.8811,0.8796,0.3462,295.970518,411.512925,True,True,none,-1,norm_clipping,None,fad90490d0cc9e5d41b75324506a673581fe8039162ea2df06c4f6e910aa4558,0.11
+2,UNSW,0.9136,0.9137,0.9136,0.9136,0.2754,535.722808,811.512925,True,True,none,-1,norm_clipping,None,91b1916b6db2cf7f3d0e1ef7e4173d3884b2ae4c428934bc417ed081fda54f70,0.12
+3,UNSW,0.9187,0.9192,0.9187,0.9188,0.2531,766.225814,1211.512925,True,True,none,-1,norm_clipping,None,48dca0d16c9b5ed30ee3c700f317b877bdd974d6d5468fdd0a75290e2f1417ce,0.1
