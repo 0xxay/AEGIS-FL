@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "fluid": true,
+  "functions": {
+    "app/main.py": {
+      "maxDuration": 300,
+      "excludeFiles": "{tests/**,dashboard/**,.github/**,docker-compose*.yml,Dockerfile,src/flower_federation.py}"
+    }
+  }
+}

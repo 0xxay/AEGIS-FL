@@ -4,9 +4,13 @@ import numpy as np
 import pandas as pd
 
 
-ROOT_DIR = Path(__file__).resolve().parents[1]
+from . import get_storage_root, is_serverless_env
+
+
+ROOT_DIR = get_storage_root()
 DATA_RAW_DIR = ROOT_DIR / "data" / "raw"
 DATA_PROCESSED_DIR = ROOT_DIR / "data" / "processed"
+DEFAULT_BENCHMARK_SAMPLES = 4500 if is_serverless_env() else 15000
 
 
 UNSW_ATTACK_CATEGORIES: List[str] = [
@@ -566,7 +570,7 @@ def ensure_dataset_available(dataset_name: str = "unsw", force_recreate: bool = 
 
         if force_recreate or not train_path.exists() or not test_path.exists():
             print(f"[Dataset] Generating calibrated UNSW-NB15 benchmark files in {unsw_dir}...")
-            train_df, test_df = generate_synthetic_unsw_nb15(num_samples=15000)
+            train_df, test_df = generate_synthetic_unsw_nb15(num_samples=DEFAULT_BENCHMARK_SAMPLES)
             train_df.to_csv(train_path, index=False)
             test_df.to_csv(test_path, index=False)
         return train_path, test_path
@@ -588,7 +592,7 @@ def ensure_dataset_available(dataset_name: str = "unsw", force_recreate: bool = 
 
         if force_recreate or has_legacy_cols or not train_path.exists() or not test_path.exists():
             print(f"[Dataset] Generating calibrated CICIDS2017 benchmark files in {cic_dir}...")
-            train_df, test_df = generate_synthetic_cicids2017(num_samples=15000)
+            train_df, test_df = generate_synthetic_cicids2017(num_samples=DEFAULT_BENCHMARK_SAMPLES)
             train_df.to_csv(train_path, index=False)
             test_df.to_csv(test_path, index=False)
         return train_path, test_path

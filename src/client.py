@@ -6,12 +6,13 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
 
+from . import get_storage_root
 from .models import create_ids_model, train_epoch
 from .privacy import PrivacyEngineDP, LocalDPEngine, PedersenCommitment
 from .attacks import AdversarialAttacks
 
 
-ROOT_DIR = Path(__file__).resolve().parents[1]
+ROOT_DIR = get_storage_root()
 
 CLIENT_IDENTITIES = {
     0: {"name": "Client 1 - Bank", "sector": "Financial Services", "icon": "🏦"},

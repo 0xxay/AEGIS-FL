@@ -7,6 +7,7 @@ import pandas as pd
 from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import OneHotEncoder
 
+from . import get_storage_root
 from .dataset_downloader import (
     ensure_dataset_available,
     normalize_real_csv,
@@ -15,7 +16,7 @@ from .dataset_downloader import (
 )
 
 
-ROOT_DIR = Path(__file__).resolve().parents[1]
+ROOT_DIR = get_storage_root()
 DATA_DIR = ROOT_DIR / "data"
 
 CLIENT_NAMES = {

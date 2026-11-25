@@ -18,7 +18,9 @@ from sklearn.metrics import (
 )
 
 
-ROOT_DIR = Path(__file__).resolve().parents[1]
+from . import get_storage_root
+
+ROOT_DIR = get_storage_root()
 CHECKPOINT_DIR = ROOT_DIR / "results" / "checkpoints"
 
 

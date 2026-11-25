@@ -11,8 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install Python dependencies first for layer caching
 COPY requirements.txt pyproject.toml ./
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir torch --extra-index-url https://download.pytorch.org/whl/cpu && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir -r requirements.txt "streamlit>=1.30.0" "flwr>=1.7.0"
 
 # Copy project source and create non-root runtime user
 COPY . .

@@ -5,13 +5,14 @@ from typing import Dict, List, Any
 import pandas as pd
 import torch
 
+from . import get_storage_root
 from .data_preprocessor import preprocess_dataset, partition_clients
 from .client import InstitutionalSuperNode
 from .server import CentralFederatedServer
 from .privacy import SecureAggregationEngine
 
 
-ROOT_DIR = Path(__file__).resolve().parents[1]
+ROOT_DIR = get_storage_root()
 RESULTS_DIR = ROOT_DIR / "results"
 
 

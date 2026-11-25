@@ -10,13 +10,14 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
 
+from . import get_storage_root
 from .models import create_ids_model, evaluate_model, save_model_checkpoint, AutoencoderIDSModel
 from .defenses import ByzantineDefenses, ClientReputationTracker
 from .privacy import SecureAggregationEngine, PedersenCommitment, HomomorphicEncryptionEngine
 from .attacks import AdversarialAttacks
 
 
-ROOT_DIR = Path(__file__).resolve().parents[1]
+ROOT_DIR = get_storage_root()
 RESULTS_DIR = ROOT_DIR / "results"
 
 
