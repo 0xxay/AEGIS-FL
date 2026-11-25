@@ -18,6 +18,13 @@ htmlcov/
 *.log
 .temp_skills/
 
+# Agent Skills & Local Generated Data
+.agent/
+data/
+results/checkpoints/
+*.pt
+*.onnx
+
 # OS & Editor
 .DS_Store
 Thumbs.db

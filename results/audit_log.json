@@ -1,29 +1,32 @@
 [
   {
     "round": 1,
-    "timestamp": "2026-11-23T15:47:17.675186Z",
+    "timestamp": "2026-11-25T07:23:33.829195+00:00",
     "prev_block_hash": "0000000000000000000000000000000000000000000000000000000000000000",
-    "weights_digest": "6aa95de7e9711e846892753d3d6f838908587aaf6d70de3b00436c3077f35187",
-    "defense_strategy": "norm_clipping",
+    "weights_digest": "60b83a926590f47bf9b2093d6026e037b508e4593f4f7c7adaa0df7edf2d7956",
+    "defense_strategy": "flame",
     "accepted_clients": [
       0,
       1,
-      2,
       3,
       4
     ],
-    "flagged_clients": [],
-    "accuracy": 0.8811111111111111,
-    "f1": 0.8796445796308768,
-    "loss": 0.3461536582973268,
-    "block_hash": "fad90490d0cc9e5d41b75324506a673581fe8039162ea2df06c4f6e910aa4558"
+    "flagged_clients": [
+      2
+    ],
+    "commitments_verified": true,
+    "secagg_verified": true,
+    "accuracy": 0.9193333333333333,
+    "f1": 0.9195014976841851,
+    "loss": 0.40944972303178573,
+    "block_hash": "6cf69f7accee44261c5750e92cd4b27f5bdf99016baac0ad2535131df5063bb7"
   },
   {
     "round": 2,
-    "timestamp": "2026-11-23T15:47:19.925723Z",
-    "prev_block_hash": "fad90490d0cc9e5d41b75324506a673581fe8039162ea2df06c4f6e910aa4558",
-    "weights_digest": "fe6b80da962e60169172db291213daeb5cc9f1d89c19843d5bc21aa73231dbf4",
-    "defense_strategy": "norm_clipping",
+    "timestamp": "2026-11-25T07:23:41.096614+00:00",
+    "prev_block_hash": "6cf69f7accee44261c5750e92cd4b27f5bdf99016baac0ad2535131df5063bb7",
+    "weights_digest": "23ef45cddf426d65db2238e5a6e8f434823e6ae09bde6b27f317775aaff018ed",
+    "defense_strategy": "flame",
     "accepted_clients": [
       0,
       1,
@@ -32,28 +35,11 @@
       4
     ],
     "flagged_clients": [],
-    "accuracy": 0.9135555555555556,
-    "f1": 0.9135996311866822,
-    "loss": 0.27544404814640683,
-    "block_hash": "91b1916b6db2cf7f3d0e1ef7e4173d3884b2ae4c428934bc417ed081fda54f70"
-  },
-  {
-    "round": 3,
-    "timestamp": "2026-11-23T15:47:22.708194Z",
-    "prev_block_hash": "91b1916b6db2cf7f3d0e1ef7e4173d3884b2ae4c428934bc417ed081fda54f70",
-    "weights_digest": "c8fd8134e72ae67f7e06aea7528eb0a4be1b198c5e6f8f3ea913315f78fcecd8",
-    "defense_strategy": "norm_clipping",
-    "accepted_clients": [
-      0,
-      1,
-      2,
-      3,
-      4
-    ],
-    "flagged_clients": [],
-    "accuracy": 0.9186666666666666,
-    "f1": 0.9188259911894272,
-    "loss": 0.25306981056928635,
-    "block_hash": "48dca0d16c9b5ed30ee3c700f317b877bdd974d6d5468fdd0a75290e2f1417ce"
+    "commitments_verified": true,
+    "secagg_verified": true,
+    "accuracy": 0.9193333333333333,
+    "f1": 0.9195014976841851,
+    "loss": 0.30578255736165577,
+    "block_hash": "57e6b0c8d2e57a6dcc97fcbd729d98d82b18d58cd025acdc7ad67848176c2b39"
   }
 ]

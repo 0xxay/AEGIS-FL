@@ -1,4 +1,4 @@
-round,dataset,accuracy,precision,recall,f1,loss,epsilon,rdp_epsilon,dp_enabled,secagg_enabled,attack_type,compromised_client,defense_strategy,flagged_clients,audit_hash,elapsed_seconds
-1,CICIDS,0.9149,0.916,0.9149,0.9152,0.2836,295.970518,411.512925,True,True,none,-1,norm_clipping,None,40cec795481f43985a053b29235fb063cf2322e5a99ade5cb9f979ad28d4453f,0.08
-2,CICIDS,0.9164,0.9177,0.9164,0.9168,0.2592,535.722808,811.512925,True,True,none,-1,norm_clipping,None,888ba64df013327e32ed98355a88ecb59f1f8fa0d3551434f63b56fab72fc528,0.07
-3,CICIDS,0.9162,0.9175,0.9162,0.9166,0.2579,766.225814,1211.512925,True,True,none,-1,norm_clipping,None,c36f80b3f34f23709c7cacbe4488764cd3c47632cf18cce6c259e0b29cf61a96,0.06
+round,dataset,model_type,multiclass,accuracy,precision,recall,f1,fpr,roc_auc,backdoor_asr,loss,epsilon,rdp_epsilon,dp_enabled,secagg_enabled,commitments_verified,secagg_verified,attack_type,compromised_client,defense_strategy,flagged_clients,confusion_matrix,audit_hash,elapsed_seconds
+1,CICIDS,resnet,False,0.9187,0.9199,0.9187,0.919,0.0745,0.9174,0.0,0.4266,23.1936,6.7372,True,True,True,True,none,-1,multi_krum,Client 4,"[[2697, 217], [149, 1437]]",38b5453cba5909aa99f0cf68351ef59137ee7b9c964be69bd46fe10516b344e9,0.1
+2,CICIDS,resnet,False,0.9187,0.9199,0.9187,0.919,0.0745,0.9192,0.0,0.4219,32.8942,8.538,True,True,True,True,none,-1,multi_krum,Client 3,"[[2697, 217], [149, 1437]]",1757bb7ea6aacf880fee344d6ad24b5fd88eb91a9fac563614683330dcc683ff,0.21
+3,CICIDS,resnet,False,0.9187,0.9199,0.9187,0.919,0.0745,0.9191,0.0,0.4206,40.3749,9.5303,True,True,True,True,none,-1,multi_krum,Client 1,"[[2697, 217], [149, 1437]]",eeeabe8d1d1fdf0e7ffb130a0dcde7146fa935bf0e4b20671112ad3ab38d3014,0.09

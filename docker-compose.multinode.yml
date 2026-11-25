@@ -3,8 +3,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ppflids_server_multinode
-    command: python -m src.federated_runner --dataset unsw --rounds 5 --defense norm_clipping
+    container_name: aegisfl_grpc_server
+    command: python -m src.flower_federation --role server --address 0.0.0.0:9092 --dataset unsw --model resnet --defense multi_krum --rounds 3 --min_clients 5
+    ports:
+      - "9092:9092"
     volumes:
       - ./data:/app/data
       - ./results:/app/results
@@ -15,10 +17,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ppflids_client_bank
-    command: python -c "print('Client 1 (Bank) SuperNode container active and listening on fednet.')"
+    container_name: aegisfl_client_bank
+    command: python -m src.flower_federation --role client --address federated-server:9092 --client_id 0 --dataset unsw --model resnet
     volumes:
-      - ./data/clients/unsw:/app/data/clients/unsw
+      - ./data/processed/unsw:/app/data/processed/unsw:ro
+      - ./data/clients/unsw/client_0.npz:/app/data/clients/unsw/client_0.npz:ro
     depends_on:
       - federated-server
     networks:
@@ -28,10 +31,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ppflids_client_hospital
-    command: python -c "print('Client 2 (Hospital) SuperNode container active and listening on fednet.')"
+    container_name: aegisfl_client_hospital
+    command: python -m src.flower_federation --role client --address federated-server:9092 --client_id 1 --dataset unsw --model resnet
     volumes:
-      - ./data/clients/unsw:/app/data/clients/unsw
+      - ./data/processed/unsw:/app/data/processed/unsw:ro
+      - ./data/clients/unsw/client_1.npz:/app/data/clients/unsw/client_1.npz:ro
     depends_on:
       - federated-server
     networks:
@@ -41,10 +45,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ppflids_client_enterprise
-    command: python -c "print('Client 3 (Enterprise) SuperNode container active and listening on fednet.')"
+    container_name: aegisfl_client_enterprise
+    command: python -m src.flower_federation --role client --address federated-server:9092 --client_id 2 --dataset unsw --model resnet
     volumes:
-      - ./data/clients/unsw:/app/data/clients/unsw
+      - ./data/processed/unsw:/app/data/processed/unsw:ro
+      - ./data/clients/unsw/client_2.npz:/app/data/clients/unsw/client_2.npz:ro
     depends_on:
       - federated-server
     networks:
@@ -54,10 +59,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ppflids_client_gov
-    command: python -c "print('Client 4 (Government) SuperNode container active and listening on fednet.')"
+    container_name: aegisfl_client_gov
+    command: python -m src.flower_federation --role client --address federated-server:9092 --client_id 3 --dataset unsw --model resnet
     volumes:
-      - ./data/clients/unsw:/app/data/clients/unsw
+      - ./data/processed/unsw:/app/data/processed/unsw:ro
+      - ./data/clients/unsw/client_3.npz:/app/data/clients/unsw/client_3.npz:ro
     depends_on:
       - federated-server
     networks:
@@ -67,10 +73,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ppflids_client_cloud
-    command: python -c "print('Client 5 (Cloud Provider) SuperNode container active and listening on fednet.')"
+    container_name: aegisfl_client_cloud
+    command: python -m src.flower_federation --role client --address federated-server:9092 --client_id 4 --dataset unsw --model resnet
     volumes:
-      - ./data/clients/unsw:/app/data/clients/unsw
+      - ./data/processed/unsw:/app/data/processed/unsw:ro
+      - ./data/clients/unsw/client_4.npz:/app/data/clients/unsw/client_4.npz:ro
     depends_on:
       - federated-server
     networks:
@@ -80,8 +87,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ppflids_dashboard_multinode
-    command: streamlit run dashboard/app.py --server.port=8501 --server.address=0.0.0.0
+    container_name: aegisfl_dashboard_multinode
+    command: streamlit run dashboard/app.py --server.port=8501 --server.address=0.0.0.0 --server.headless=true
     ports:
       - "8501:8501"
     volumes:
