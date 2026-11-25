@@ -11,6 +11,8 @@
 [![Contributions Welcome](https://img.shields.io/badge/Contributions-Welcome-orange.svg)](CONTRIBUTING.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/0xxay/AEGIS-FL/pulls)
 
+🌐 **[Live Web App (Vercel)](https://aegis-fl-ids.vercel.app)** · 📄 **[Plain-English User Guide (PDF)](AEGIS-FL_User_Guide.pdf)** · 📖 **[User Guide (Markdown)](docs/USER_GUIDE.md)** · 🤝 **[Contributing](CONTRIBUTING.md)**
+
 ---
 
 > [!TIP]

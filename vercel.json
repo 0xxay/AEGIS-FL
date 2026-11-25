@@ -4,7 +4,7 @@
   "functions": {
     "app/main.py": {
       "maxDuration": 300,
-      "excludeFiles": "{tests/**,dashboard/**,.github/**,docker-compose*.yml,Dockerfile,src/flower_federation.py}"
+      "excludeFiles": "{tests/**,dashboard/**,docs/**,.github/**,docker-compose*.yml,Dockerfile,src/flower_federation.py}"
     }
   }
 }

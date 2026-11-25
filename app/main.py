@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Optional
 import pandas as pd
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
-from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel, Field
 
 from src import PACKAGE_ROOT, get_storage_root
@@ -146,6 +146,14 @@ def serve_index() -> HTMLResponse:
     if not html_path.exists():
         raise HTTPException(status_code=404, detail="Frontend index.html missing.")
     return HTMLResponse(content=html_path.read_text(encoding="utf-8"))
+
+
+@app.get("/AEGIS-FL_User_Guide.pdf", include_in_schema=False)
+def serve_user_guide_pdf() -> FileResponse:
+    for candidate in (PACKAGE_ROOT / "public" / "AEGIS-FL_User_Guide.pdf", PACKAGE_ROOT / "AEGIS-FL_User_Guide.pdf"):
+        if candidate.exists():
+            return FileResponse(path=candidate, media_type="application/pdf", filename="AEGIS-FL_User_Guide.pdf")
+    raise HTTPException(status_code=404, detail="User guide PDF not found.")
 
 
 @app.get("/api/health")
