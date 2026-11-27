@@ -19,7 +19,7 @@ from flwr.common import Parameters, Scalar, FitRes, ndarrays_to_parameters, para
 from flwr.server.client_proxy import ClientProxy
 
 from .data_preprocessor import preprocess_dataset, partition_clients
-from .client import InstitutionalSuperNode
+from .client import CLIENT_IDENTITIES, InstitutionalSuperNode
 from .server import CentralFederatedServer
 
 
@@ -153,7 +153,11 @@ class AegisByzantineStrategy(fl.server.strategy.FedAvg):
 
         max_eps = max((float(t["epsilon"]) for t in telemetry_list), default=0.0)
         max_rdp = max((float(t["rdp_epsilon"]) for t in telemetry_list), default=0.0)
-        flagged_str = ", ".join(f"Client {c}" for c in round_res["flagged_clients"]) if round_res["flagged_clients"] else "None"
+        flagged_str = (
+            ", ".join(CLIENT_IDENTITIES.get(c, {"name": f"Client {c + 1}"})["name"] for c in round_res["flagged_clients"])
+            if round_res["flagged_clients"]
+            else "None"
+        )
 
         self.records.append({
             "round": server_round,

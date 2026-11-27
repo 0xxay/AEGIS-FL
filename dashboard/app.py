@@ -1036,7 +1036,7 @@ elif st.session_state.active_page == "Defense Lab":
             "Defense": "multi_krum",
             "Accuracy": "91.78% (Protected)",
             "Precision": "91.84%",
-            "Flagged Silos": "Client 2",
+            "Flagged Silos": "Client 3 - Enterprise",
         },
         {
             "Scenario": "Stealth Norm-Bounded Poisoning + Head Guard",
@@ -1044,7 +1044,7 @@ elif st.session_state.active_page == "Defense Lab":
             "Defense": "norm_clipping",
             "Accuracy": "91.64% (Protected)",
             "Precision": "91.71%",
-            "Flagged Silos": "Client 2",
+            "Flagged Silos": "Client 3 - Enterprise",
         },
         {
             "Scenario": "Data Poisoning (Label Flip) + Cosine / FLAME",
@@ -1052,7 +1052,7 @@ elif st.session_state.active_page == "Defense Lab":
             "Defense": "flame",
             "Accuracy": "91.51% (Protected)",
             "Precision": "91.60%",
-            "Flagged Silos": "Client 2",
+            "Flagged Silos": "Client 3 - Enterprise",
         },
     ]
     st.dataframe(pd.DataFrame(rows), use_container_width=True)

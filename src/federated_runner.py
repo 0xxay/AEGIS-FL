@@ -7,7 +7,7 @@ import torch
 
 from . import get_storage_root
 from .data_preprocessor import preprocess_dataset, partition_clients
-from .client import InstitutionalSuperNode
+from .client import CLIENT_IDENTITIES, InstitutionalSuperNode
 from .server import CentralFederatedServer
 from .privacy import SecureAggregationEngine
 
@@ -165,7 +165,11 @@ def run_federated_experiment(
         honest_telemetry = [t for t in client_telemetry_list if t["client_id"] != compromised_client_id or attack_type == "none"]
         max_epsilon = max(t["epsilon"] for t in honest_telemetry)
         max_rdp_epsilon = max(t.get("rdp_epsilon", t["epsilon"]) for t in honest_telemetry)
-        flagged_str = ", ".join(f"Client {c}" for c in round_result["flagged_clients"]) if round_result["flagged_clients"] else "None"
+        flagged_str = (
+            ", ".join(CLIENT_IDENTITIES.get(c, {"name": f"Client {c + 1}"})["name"] for c in round_result["flagged_clients"])
+            if round_result["flagged_clients"]
+            else "None"
+        )
 
         print(f"Round {r} Result:")
         print(f"  * Accuracy: {round_result['accuracy']:.2%} | Precision: {round_result['precision']:.4f} | Recall: {round_result['recall']:.4f} | F1: {round_result['f1']:.4f}")

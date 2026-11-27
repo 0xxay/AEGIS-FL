@@ -614,10 +614,10 @@
       bLed.textContent = led.valid ? `SHA-256 Ledger: Verified (${led.height} blk)` : 'Ledger: Unverified';
       bLed.className = led.valid ? 'pill pill-blue' : 'pill pill-red';
 
-      // Silo cards
-      const atk = document.getElementById('cfg-attack').value;
-      const badCid = Number(document.getElementById('cfg-badcid').value);
-      const modelTxt = document.getElementById('cfg-model').value.toUpperCase();
+      // Silo cards (reflect actual executed run metadata rather than unsubmitted dropdown edits)
+      const atk = (L.attack_type !== undefined && L.attack_type !== '') ? L.attack_type : document.getElementById('cfg-attack').value;
+      const badCid = (L.compromised_client !== undefined && L.compromised_client !== '') ? Number(L.compromised_client) : Number(document.getElementById('cfg-badcid').value);
+      const modelTxt = String(L.model_type || document.getElementById('cfg-model').value).toUpperCase();
       const clipVal = document.getElementById('cfg-clip').value;
       document.getElementById('silo-grid').innerHTML = (data.silos || []).map(s => {
         const isBad = atk !== 'none' && s.client_id === badCid;
@@ -682,7 +682,9 @@
       document.querySelector('#tbl-history tbody').innerHTML = hist.map(r => '<tr>' + cols.map(c => `<td>${r[c] !== undefined ? r[c] : '-'}</td>`).join('') + '</tr>').join('');
 
       // Defense Lab updates
-      const flagged = L.flagged_clients && L.flagged_clients !== 'None' ? L.flagged_clients : null;
+      const siloNameMap = { 'Client 0': 'Client 1 - Bank', 'Client 1': 'Client 2 - Hospital', 'Client 2': 'Client 3 - Enterprise', 'Client 3': 'Client 4 - Government', 'Client 4': 'Client 5 - Cloud Provider' };
+      const rawFlagged = L.flagged_clients && L.flagged_clients !== 'None' ? String(L.flagged_clients) : null;
+      const flagged = rawFlagged ? rawFlagged.replace(/\bClient [0-4]\b(?! -)/g, m => siloNameMap[m] || m) : null;
       const alertEl = document.getElementById('def-alert');
       if (flagged) {
         alertEl.style.borderLeftColor = '#dc2626';
@@ -700,12 +702,12 @@
         : led.message || 'No audit chain found.';
 
       document.getElementById('def-matrix-body').innerHTML = `
-        <tr style="background:#fef9c3;"><td><strong>Live Session Result</strong></td><td>${L.attack_type || 'none'}</td><td>${L.defense_strategy || 'multi_krum'}</td><td><strong>${pct(L.accuracy)}</strong></td><td>${pct(L.precision)}</td><td>${L.flagged_clients || 'None'}</td></tr>
+        <tr style="background:#fef9c3;"><td><strong>Live Session Result</strong></td><td>${L.attack_type || 'none'}</td><td>${L.defense_strategy || 'multi_krum'}</td><td><strong>${pct(L.accuracy)}</strong></td><td>${pct(L.precision)}</td><td>${flagged || 'None'}</td></tr>
         <tr><td>Honest Baseline (Opacus RDP + SecAgg+)</td><td>none</td><td>multi_krum</td><td>91.93%</td><td>91.99%</td><td>None</td></tr>
         <tr><td>Model Scaling (-25x) — Undefended</td><td>model_scaling</td><td>fedavg</td><td>40.29% (Collapsed)</td><td>16.23%</td><td>None (Breach)</td></tr>
-        <tr><td>Model Scaling (-25x) + Multi-Krum</td><td>model_scaling</td><td>multi_krum</td><td>91.78% (Protected)</td><td>91.84%</td><td>Client 2</td></tr>
-        <tr><td>Stealth Norm-Bounded Poisoning + Head Guard</td><td>adaptive_poisoning</td><td>norm_clipping</td><td>91.64% (Protected)</td><td>91.71%</td><td>Client 2</td></tr>
-        <tr><td>Data Poisoning (Label Flip) + FLAME</td><td>label_flipping</td><td>flame</td><td>91.93% (Protected)</td><td>91.99%</td><td>Client 2</td></tr>`;
+        <tr><td>Model Scaling (-25x) + Multi-Krum</td><td>model_scaling</td><td>multi_krum</td><td>91.78% (Protected)</td><td>91.84%</td><td>Client 3 - Enterprise</td></tr>
+        <tr><td>Stealth Norm-Bounded Poisoning + Head Guard</td><td>adaptive_poisoning</td><td>norm_clipping</td><td>91.64% (Protected)</td><td>91.71%</td><td>Client 3 - Enterprise</td></tr>
+        <tr><td>Data Poisoning (Label Flip) + FLAME</td><td>label_flipping</td><td>flame</td><td>91.93% (Protected)</td><td>91.99%</td><td>Client 3 - Enterprise</td></tr>`;
 
       if (data.schemas) {
         document.getElementById('tags-unsw').innerHTML = data.schemas.unsw_classes.map(c => `<span class="pill pill-amber">${c}</span>`).join('');
