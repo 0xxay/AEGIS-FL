@@ -9,7 +9,7 @@
 
 ## Scope
 
-Security reports are welcomed across all cryptographic, privacy, and consensus subsystems of **AEGIS-FL (PPFL-IDS)**:
+Security reports are welcomed across all cryptographic, privacy, and consensus subsystems of **Qelvari**:
 - Differential Privacy & Rényi DP accounting (`src/privacy.py`)
 - Drop-resilient `SecAgg+` masking, Pedersen commitments, and Paillier HE (`src/privacy.py`, `src/server.py`)
 - Byzantine-robust aggregation filters (`src/defenses.py`)

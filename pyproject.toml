@@ -3,9 +3,9 @@ requires = ["setuptools>=68.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "aegis-fl"
+name = "qelvari"
 version = "2.5.0"
-description = "AEGIS-FL (PPFL-IDS): Privacy-Preserving Federated Intrusion Detection System"
+description = "Qelvari: Privacy-Preserving Federated Intrusion Detection System"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { file = "LICENSE" }

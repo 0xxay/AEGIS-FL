@@ -42,7 +42,7 @@ def _ndarrays_to_state_dict(
     }
 
 
-class AegisFlowerClient(fl.client.NumPyClient):
+class QelvariFlowerClient(fl.client.NumPyClient):
     """Flower gRPC edge client wrapping an `InstitutionalSuperNode` silo."""
 
     def __init__(self, node: InstitutionalSuperNode, local_epochs: int = 2, lr: float = 0.002):
@@ -80,7 +80,7 @@ class AegisFlowerClient(fl.client.NumPyClient):
         return _state_dict_to_ndarrays(update_dict, self.param_keys), int(self.node.num_samples), metrics
 
 
-class AegisByzantineStrategy(fl.server.strategy.FedAvg):
+class QelvariByzantineStrategy(fl.server.strategy.FedAvg):
     """
     Custom Flower Server Strategy delegating aggregation, commitment verification,
     Byzantine defense filtering, SHA-256 audit logging, and checkpointing to `CentralFederatedServer`.
@@ -215,7 +215,7 @@ def run_server(
         defense_strategy=defense_strategy,
         num_clients=min_clients,
     )
-    strategy = AegisByzantineStrategy(
+    strategy = QelvariByzantineStrategy(
         central_server=central_server,
         min_clients=min_clients,
     )
@@ -260,7 +260,7 @@ def run_client(
         node.attack_type = attack_type
     node.load_data()
 
-    client = AegisFlowerClient(node=node)
+    client = QelvariFlowerClient(node=node)
     for attempt in range(1, retries + 1):
         try:
             print(f"[Flower SuperNode {client_id} - {node.name}] Connecting to {server_address} (attempt {attempt})...")
@@ -274,7 +274,7 @@ def run_client(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="AEGIS-FL Flower gRPC Distributed Runner")
+    parser = argparse.ArgumentParser(description="Qelvari Flower gRPC Distributed Runner")
     parser.add_argument("--role", type=str, required=True, choices=["server", "client"])
     parser.add_argument("--address", type=str, default="0.0.0.0:9092")
     parser.add_argument("--client_id", type=int, default=0)

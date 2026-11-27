@@ -21,7 +21,7 @@ from src.server import CentralFederatedServer
 
 
 app = FastAPI(
-    title="AEGIS-FL™ — Privacy-Preserving Federated IDS",
+    title="Qelvari — Privacy-Preserving Federated IDS",
     version="2.5.0",
     description="Cross-silo federated intrusion detection with Opacus per-sample DP-SGD, drop-resilient SecAgg+, and verifiable commitments.",
 )
@@ -148,17 +148,45 @@ def serve_index() -> HTMLResponse:
     return HTMLResponse(content=html_path.read_text(encoding="utf-8"))
 
 
+@app.get("/qelvari-logo.png", include_in_schema=False)
+def serve_logo_png() -> FileResponse:
+    p = PACKAGE_ROOT / "public" / "qelvari-logo.png"
+    if p.exists():
+        return FileResponse(path=p, media_type="image/png")
+    raise HTTPException(status_code=404, detail="Logo not found.")
+
+
+@app.get("/qelvari-logo.svg", include_in_schema=False)
+def serve_logo_svg() -> FileResponse:
+    p = PACKAGE_ROOT / "public" / "qelvari-logo.svg"
+    if p.exists():
+        return FileResponse(path=p, media_type="image/svg+xml")
+    raise HTTPException(status_code=404, detail="SVG logo not found.")
+
+
+@app.get("/favicon.png", include_in_schema=False)
+def serve_favicon() -> FileResponse:
+    p = PACKAGE_ROOT / "public" / "favicon.png"
+    if p.exists():
+        return FileResponse(path=p, media_type="image/png")
+    raise HTTPException(status_code=404, detail="Favicon not found.")
+
+
+@app.get("/Qelvari_User_Guide.pdf", include_in_schema=False)
 @app.get("/AEGIS-FL_User_Guide.pdf", include_in_schema=False)
 def serve_user_guide_pdf() -> FileResponse:
-    for candidate in (PACKAGE_ROOT / "public" / "AEGIS-FL_User_Guide.pdf", PACKAGE_ROOT / "AEGIS-FL_User_Guide.pdf"):
+    for candidate in (
+        PACKAGE_ROOT / "public" / "Qelvari_User_Guide.pdf",
+        PACKAGE_ROOT / "Qelvari_User_Guide.pdf",
+    ):
         if candidate.exists():
-            return FileResponse(path=candidate, media_type="application/pdf", filename="AEGIS-FL_User_Guide.pdf")
+            return FileResponse(path=candidate, media_type="application/pdf", filename="Qelvari_User_Guide.pdf")
     raise HTTPException(status_code=404, detail="User guide PDF not found.")
 
 
 @app.get("/api/health")
 def health_check() -> dict:
-    return {"status": "ok", "service": "aegis-fl", "version": "2.5.0", "storage": str(get_storage_root())}
+    return {"status": "ok", "service": "qelvari", "version": "2.5.0", "storage": str(get_storage_root())}
 
 
 @app.get("/api/state")

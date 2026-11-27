@@ -15,11 +15,11 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 # Copy project source and create non-root runtime user
 COPY . .
-RUN useradd -m -u 10001 aegis && \
+RUN useradd -m -u 10001 qelvari && \
     mkdir -p /app/data /app/results/checkpoints && \
-    chown -R aegis:aegis /app
+    chown -R qelvari:qelvari /app
 
-USER aegis
+USER qelvari
 
 EXPOSE 8501 9092
 

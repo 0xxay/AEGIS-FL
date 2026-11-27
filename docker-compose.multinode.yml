@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: aegisfl_grpc_server
+    container_name: qelvari_grpc_server
     command: python -m src.flower_federation --role server --address 0.0.0.0:9092 --dataset unsw --model resnet --defense multi_krum --rounds 3 --min_clients 5
     ports:
       - "9092:9092"
@@ -17,7 +17,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: aegisfl_client_bank
+    container_name: qelvari_client_bank
     command: python -m src.flower_federation --role client --address federated-server:9092 --client_id 0 --dataset unsw --model resnet
     volumes:
       - ./data/processed/unsw:/app/data/processed/unsw:ro
@@ -31,7 +31,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: aegisfl_client_hospital
+    container_name: qelvari_client_hospital
     command: python -m src.flower_federation --role client --address federated-server:9092 --client_id 1 --dataset unsw --model resnet
     volumes:
       - ./data/processed/unsw:/app/data/processed/unsw:ro
@@ -45,7 +45,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: aegisfl_client_enterprise
+    container_name: qelvari_client_enterprise
     command: python -m src.flower_federation --role client --address federated-server:9092 --client_id 2 --dataset unsw --model resnet
     volumes:
       - ./data/processed/unsw:/app/data/processed/unsw:ro
@@ -59,7 +59,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: aegisfl_client_gov
+    container_name: qelvari_client_gov
     command: python -m src.flower_federation --role client --address federated-server:9092 --client_id 3 --dataset unsw --model resnet
     volumes:
       - ./data/processed/unsw:/app/data/processed/unsw:ro
@@ -73,7 +73,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: aegisfl_client_cloud
+    container_name: qelvari_client_cloud
     command: python -m src.flower_federation --role client --address federated-server:9092 --client_id 4 --dataset unsw --model resnet
     volumes:
       - ./data/processed/unsw:/app/data/processed/unsw:ro
@@ -87,7 +87,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: aegisfl_dashboard_multinode
+    container_name: qelvari_dashboard_multinode
     command: streamlit run dashboard/app.py --server.port=8501 --server.address=0.0.0.0 --server.headless=true
     ports:
       - "8501:8501"

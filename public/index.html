@@ -1,575 +1,1334 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AEGIS-FL™ — Privacy-Preserving Federated Intrusion Detection System</title>
+  <title>Qelvari — Federated Intrusion Detection &amp; Cryptographic Consensus</title>
+  <meta name="description" content="Cross-silo federated intrusion detection across sovereign networks with Opacus per-sample DP-SGD, drop-resilient SecAgg+, and Byzantine outlier isolation." />
+  <meta name="theme-color" content="#05080b" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
   <style>
-    :root {
-      --bg: #ffffff;
-      --ink: #0f172a;
-      --slate: #64748b;
-      --muted: #94a3b8;
-      --line: #e2e8f0;
-      --soft: #f8fafc;
-      --amber: #facc15;
-      --amber-dark: #eab308;
-      --amber-ink: #854d0e;
-      --amber-bg: #fef9c3;
-      --green: #16a34a;
-      --green-bg: #dcfce7;
-      --red: #dc2626;
-      --red-bg: #fee2e2;
-      --purple: #7c3aed;
-      --purple-bg: #ede9fe;
-      --blue: #2563eb;
-      --blue-bg: #dbeafe;
+    :root, [data-theme="dark"] {
+      --bg: #05080b;
+      --bg-elev: #0a1015;
+      --surface: #0e161d;
+      --surface-2: #131e27;
+      --surface-glass: rgba(12, 19, 25, 0.76);
+      --border: rgba(255, 255, 255, 0.085);
+      --border-strong: rgba(255, 255, 255, 0.16);
+      --ink: #f3f7f5;
+      --ink-sec: #94a8a0;
+      --ink-muted: #5e736b;
+      --accent: #4ade80;
+      --accent-lime: #a3e635;
+      --accent-deep: #10b981;
+      --accent-soft: rgba(74, 222, 128, 0.12);
+      --accent-ring: rgba(74, 222, 128, 0.36);
+      --danger: #f87171;
+      --danger-soft: rgba(248, 113, 113, 0.12);
+      --danger-border: rgba(248, 113, 113, 0.32);
+      --warn: #fbbf24;
+      --cta-bg: #f8fafc;
+      --cta-ink: #05080b;
+      --cta-hover: #e2fbe8;
+      --nav-bg: rgba(5, 8, 11, 0.82);
+      --shadow-stage: 0 28px 70px rgba(0, 0, 0, 0.65);
+      --glow-a: rgba(52, 211, 153, 0.19);
+      --glow-b: rgba(14, 116, 144, 0.22);
+      --glow-c: rgba(163, 230, 53, 0.12);
+      --code-bg: #030608;
+      color-scheme: dark;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    [data-theme="light"] {
+      --bg: #f4f7f5;
+      --bg-elev: #edf2ef;
+      --surface: #ffffff;
+      --surface-2: #e8efeb;
+      --surface-glass: rgba(255, 255, 255, 0.86);
+      --border: rgba(7, 17, 13, 0.10);
+      --border-strong: rgba(7, 17, 13, 0.20);
+      --ink: #07110d;
+      --ink-sec: #3d5249;
+      --ink-muted: #687d74;
+      --accent: #059669;
+      --accent-lime: #16a34a;
+      --accent-deep: #047857;
+      --accent-soft: rgba(5, 150, 105, 0.10);
+      --accent-ring: rgba(5, 150, 105, 0.30);
+      --danger: #dc2626;
+      --danger-soft: rgba(220, 38, 38, 0.09);
+      --danger-border: rgba(220, 38, 38, 0.28);
+      --warn: #d97706;
+      --cta-bg: #07110d;
+      --cta-ink: #f8fafc;
+      --cta-hover: #132a20;
+      --nav-bg: rgba(244, 247, 245, 0.86);
+      --shadow-stage: 0 24px 56px rgba(7, 17, 13, 0.12);
+      --glow-a: rgba(16, 185, 129, 0.16);
+      --glow-b: rgba(14, 165, 233, 0.14);
+      --glow-c: rgba(132, 204, 22, 0.14);
+      --code-bg: #09110e;
+      color-scheme: light;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; caret-color: var(--accent); }
+    ::selection { background: rgba(74, 222, 128, 0.28); color: var(--ink); }
+    ::-webkit-scrollbar { width: 9px; height: 9px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--surface-2); border-radius: 99px; border: 2px solid var(--bg); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--ink-muted); }
+
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--ink);
-      line-height: 1.55;
-      -webkit-font-smoothing: antialiased;
-    }
-    .navbar {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(255,255,255,0.93);
-      backdrop-filter: blur(18px);
-      border-bottom: 1px solid #f1f5f9;
-      padding: 14px 32px;
-      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
-    }
-    .brand { display: flex; align-items: center; gap: 10px; }
-    .brand-name { font-size: 22px; font-weight: 900; letter-spacing: -0.04em; }
-    .brand-name sup { color: var(--amber-dark); font-size: 12px; }
-    .brand-sub { font-size: 12px; font-weight: 600; color: var(--slate); border-left: 1px solid var(--line); padding-left: 12px; }
-    .badges { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-    .pill {
-      font-size: 11px; font-weight: 800; padding: 5px 12px; border-radius: 999px; white-space: nowrap;
-    }
-    .pill-green { background: var(--green-bg); color: #166534; }
-    .pill-amber { background: var(--amber-bg); color: var(--amber-ink); }
-    .pill-purple { background: var(--purple-bg); color: #5b21b6; }
-    .pill-blue { background: var(--blue-bg); color: #1e40af; }
-    .pill-red { background: var(--red-bg); color: #991b1b; }
-
-    .container { max-width: 1260px; margin: 0 auto; padding: 20px 28px 64px; }
-
-    /* Navigation Tabs */
-    .nav-tabs {
-      display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 16px;
-    }
-    .tab-btn {
-      background: #fff; color: #1e293b; border: 1.5px solid #cbd5e1;
-      border-radius: 999px; padding: 10px 14px; font-size: 13.5px; font-weight: 700;
-      cursor: pointer; transition: all 0.18s ease; white-space: nowrap; font-family: inherit;
-    }
-    .tab-btn:hover { background: var(--amber-bg); border-color: var(--amber); color: var(--amber-ink); }
-    .tab-btn.active {
-      background: var(--amber); border-color: var(--amber-dark); color: var(--ink);
-      font-weight: 800; box-shadow: 0 4px 14px rgba(250,204,21,0.38);
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: background-color 0.28s ease, color 0.28s ease;
     }
 
-    /* Config Expander */
-    details.config-box {
-      border: 1px solid var(--line); border-radius: 16px; background: #fff;
-      margin-bottom: 24px; overflow: hidden; box-shadow: 0 2px 8px rgba(15,23,42,0.03);
+    h1, h2, h3, h4, .brand-word {
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: -0.03em;
+      text-wrap: balance;
     }
-    details.config-box summary {
-      padding: 13px 20px; background: var(--soft); font-weight: 800; font-size: 14.5px;
-      cursor: pointer; user-select: none; display: flex; align-items: center; justify-content: space-between;
-    }
-    .config-grid {
-      padding: 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
-      border-top: 1px solid var(--line);
-    }
-    .cfg-col h4 { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate); margin-bottom: 12px; }
-    .field { margin-bottom: 12px; }
-    .field label { display: block; font-size: 12.5px; font-weight: 700; margin-bottom: 5px; color: var(--ink); }
-    .field select, .field input[type="number"], .field input[type="range"] {
-      width: 100%; padding: 8px 11px; border-radius: 10px; border: 1.5px solid var(--line);
-      background: var(--soft); font-family: inherit; font-size: 13px; font-weight: 600; color: var(--ink);
-    }
-    .chk { display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 600; margin-bottom: 8px; cursor: pointer; }
-    .chk input { width: 16px; height: 16px; accent-color: var(--ink); }
 
-    .btn-primary {
-      width: 100%; background: var(--amber); border: 1.5px solid var(--amber-dark);
-      color: var(--ink); font-weight: 800; font-size: 13.5px; padding: 11px 18px;
-      border-radius: 999px; cursor: pointer; font-family: inherit;
-      box-shadow: 0 4px 14px rgba(250,204,21,0.35); transition: all 0.18s;
+    .mono, code, pre, .num {
+      font-family: 'JetBrains Mono', monospace;
+      font-variant-numeric: tabular-nums;
     }
-    .btn-primary:hover:not(:disabled) { background: var(--amber-dark); transform: translateY(-1px); }
-    .btn-primary:disabled { opacity: 0.6; cursor: wait; }
 
+    a { color: inherit; text-underline-offset: 3px; }
+    button, select, input { font: inherit; color: inherit; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    .skip-link {
+      position: absolute; left: -9999px; top: 10px; z-index: 999;
+      background: var(--cta-bg); color: var(--cta-ink); padding: 8px 16px; border-radius: 8px; font-weight: 600;
+    }
+    .skip-link:focus { left: 16px; }
+
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 0 28px; }
+
+    /* Top Navigation */
+    .topbar {
+      position: sticky; top: 0; z-index: 120;
+      background: var(--nav-bg);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-inner {
+      max-width: 1280px; margin: 0 auto; padding: 0 28px;
+      height: 70px; display: flex; align-items: center; justify-content: space-between; gap: 18px;
+    }
+    .brand {
+      display: inline-flex; align-items: center; gap: 11px; text-decoration: none;
+    }
+    .brand img {
+      width: 34px; height: 34px; border-radius: 9px; display: block;
+      filter: drop-shadow(0 0 10px rgba(74, 222, 128, 0.22));
+    }
+    .brand-word { font-size: 20px; font-weight: 700; letter-spacing: -0.035em; }
+    .brand-ver {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500;
+      padding: 2px 7px; border-radius: 6px; background: var(--accent-soft); color: var(--accent);
+      border: 1px solid var(--accent-ring);
+    }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 4px;
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 4px; border-radius: 999px;
+    }
+    .nav-btn {
+      background: transparent; border: none; cursor: pointer;
+      padding: 7px 15px; border-radius: 999px; font-size: 13.5px; font-weight: 600;
+      color: var(--ink-sec); transition: color 0.18s ease, background-color 0.18s ease, transform 0.15s ease;
+      white-space: nowrap;
+    }
+    .nav-btn:hover { color: var(--ink); }
+    .nav-btn.active {
+      background: var(--cta-bg); color: var(--cta-ink);
+    }
+
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .status-chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 500;
+      background: var(--surface); border: 1px solid var(--border); color: var(--ink-sec);
+    }
+    .pulse-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
+      box-shadow: 0 0 0 0 var(--accent-ring);
+      animation: pulseRing 2.6s infinite;
+    }
+    @keyframes pulseRing {
+      0% { box-shadow: 0 0 0 0 var(--accent-ring); }
+      70% { box-shadow: 0 0 0 7px rgba(74, 222, 128, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+    }
+
+    .icon-btn {
+      width: 38px; height: 38px; border-radius: 999px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--ink-sec); cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: border-color 0.18s ease, color 0.18s ease, transform 0.15s ease;
+      text-decoration: none;
+    }
+    .icon-btn:hover { border-color: var(--border-strong); color: var(--ink); transform: translateY(-1px); }
+
+    .btn-pill {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 11px 22px; border-radius: 999px; font-size: 14px; font-weight: 600;
+      cursor: pointer; text-decoration: none; border: 1px solid transparent;
+      transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.18s ease, border-color 0.18s ease;
+      min-height: 42px;
+    }
+    .btn-pill:active { transform: scale(0.98); }
+    .btn-solid { background: var(--cta-bg); color: var(--cta-ink); }
+    .btn-solid:hover { background: var(--cta-hover); transform: translateY(-1.5px); }
+    .btn-solid:disabled { opacity: 0.55; cursor: wait; transform: none; }
+    .btn-ghost {
+      background: transparent; color: var(--ink); border-color: var(--border-strong);
+    }
+    .btn-ghost:hover { background: var(--surface); border-color: var(--ink-sec); transform: translateY(-1.5px); }
+    .btn-sm { padding: 7px 15px; font-size: 13px; min-height: 36px; }
+
+    /* Hero Stage (Asymmetric Split + 3D WebGL + Isometric Glass Planes) */
+    .hero-sec {
+      position: relative;
+      padding: 54px 0 38px;
+      overflow: hidden;
+    }
+    .hero-ambient {
+      position: absolute; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(540px circle at 76% 44%, var(--glow-a), transparent 68%),
+        radial-gradient(480px circle at 84% 26%, var(--glow-b), transparent 64%),
+        radial-gradient(380px circle at 64% 68%, var(--glow-c), transparent 66%);
+    }
+    .hero-grid {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: 1.02fr 1.08fr; gap: 44px; align-items: center;
+      min-height: 540px;
+    }
+    .hero-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 5px 14px; border-radius: 999px;
+      background: linear-gradient(90deg, #4ade80 0%, #a3e635 100%);
+      color: #041008; font-size: 11.5px; font-weight: 700; letter-spacing: 0.05em;
+      text-transform: uppercase; margin-bottom: 22px;
+    }
+    .hero-copy h1 {
+      font-size: clamp(2.55rem, 4.6vw, 4.25rem);
+      line-height: 1.05; font-weight: 700; letter-spacing: -0.035em;
+      margin-bottom: 20px;
+    }
+    .hero-accent-line {
+      display: block;
+      background: linear-gradient(92deg, var(--accent-lime) 0%, var(--accent) 58%, var(--accent-deep) 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .hero-lead {
+      font-size: 16px; color: var(--ink-sec); max-width: 54ch;
+      line-height: 1.68; margin-bottom: 28px;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }
+    .hero-proof {
+      display: flex; flex-wrap: wrap; gap: 18px; padding-top: 18px;
+      border-top: 1px solid var(--border); font-size: 12.5px; color: var(--ink-sec);
+    }
+    .hero-proof span strong { color: var(--ink); font-weight: 600; }
+
+    /* 3D Interactive Stage */
+    .stage-wrap {
+      position: relative; height: 500px; display: flex; align-items: center; justify-content: center;
+      perspective: 1300px;
+    }
+    .stage-ring-svg {
+      position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.45;
+    }
+    #qelvari-3d {
+      position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+      cursor: grab; z-index: 1;
+    }
+    #qelvari-3d:active { cursor: grabbing; }
+
+    .stage-rig {
+      position: relative; z-index: 2; width: 100%; max-width: 540px; height: 400px;
+      transform-style: preserve-3d;
+      transform: rotateY(-11deg) rotateX(5deg);
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none;
+    }
+    .glass-window {
+      position: absolute; left: 48px; right: 44px; top: 38px;
+      background: var(--surface-glass);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--border-strong);
+      border-radius: 16px; padding: 18px 20px;
+      box-shadow: var(--shadow-stage);
+      pointer-events: auto;
+    }
+    .win-top {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-bottom: 12px; margin-bottom: 14px; border-bottom: 1px solid var(--border);
+      font-size: 12px; color: var(--ink-sec);
+    }
+    .win-brand { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--ink); }
+    .win-brand img { width: 20px; height: 20px; border-radius: 5px; }
+    .win-metrics {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;
+    }
+    .win-stat {
+      background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border);
+      border-radius: 12px; padding: 11px 13px;
+    }
+    [data-theme="light"] .win-stat { background: rgba(7, 17, 13, 0.03); }
+    .win-stat-lbl { font-size: 11px; color: var(--ink-sec); margin-bottom: 3px; }
+    .win-stat-val { font-size: 22px; font-weight: 700; color: var(--ink); }
+    .win-wave {
+      height: 62px; border-radius: 10px; padding: 8px 10px;
+      background: rgba(74, 222, 128, 0.05); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+
+    /* Left Vertical Tool Dock (matching reference screenshot) */
+    .stage-dock-left {
+      position: absolute; left: 0; top: 102px;
+      display: flex; flex-direction: column; gap: 8px;
+      padding: 10px 8px; border-radius: 14px;
+      background: var(--surface-glass); backdrop-filter: blur(14px);
+      border: 1px solid var(--border-strong);
+      box-shadow: var(--shadow-stage);
+      transform: translateZ(36px) rotateZ(-4deg);
+      pointer-events: auto;
+    }
+    .dock-tool {
+      width: 36px; height: 36px; border-radius: 9px; border: 1px solid transparent;
+      background: transparent; color: var(--ink-sec); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.16s ease;
+    }
+    .dock-tool:hover, .dock-tool.active {
+      background: var(--accent-soft); color: var(--accent); border-color: var(--accent-ring);
+    }
+
+    /* Right Floating Status Chips (matching reference screenshot) */
+    .stage-chips-right {
+      position: absolute; right: -6px; top: 76px;
+      display: flex; flex-direction: column; gap: 12px;
+      transform: translateZ(44px);
+      pointer-events: auto;
+    }
+    .float-chip {
+      display: inline-flex; align-items: center; gap: 9px;
+      padding: 9px 14px; border-radius: 12px;
+      background: var(--surface-glass); backdrop-filter: blur(14px);
+      border: 1px solid var(--border-strong);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.40);
+      font-size: 12px; font-weight: 600; color: var(--ink);
+      animation: gentleFloat 4.8s ease-in-out infinite;
+    }
+    .float-chip:nth-child(2) { animation-delay: -1.6s; }
+    .float-chip:nth-child(3) { animation-delay: -3.2s; }
+    @keyframes gentleFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+    .chip-dot {
+      width: 20px; height: 20px; border-radius: 6px;
+      background: var(--accent-soft); color: var(--accent);
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+
+    /* Bottom 5-Orb Silo Bar (matching reference screenshot) */
+    .stage-orbs-bottom {
+      position: absolute; left: 56px; bottom: 14px;
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 9px 14px; border-radius: 14px;
+      background: var(--surface-glass); backdrop-filter: blur(14px);
+      border: 1px solid var(--border-strong);
+      box-shadow: var(--shadow-stage);
+      transform: translateZ(48px);
+      pointer-events: auto;
+    }
+    .silo-orb {
+      width: 26px; height: 26px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.28);
+      background: radial-gradient(circle at 32% 30%, #a3e635, #10b981);
+      box-shadow: 0 0 12px rgba(74, 222, 128, 0.45);
+      cursor: pointer; position: relative; transition: transform 0.16s ease;
+    }
+    .silo-orb:hover { transform: scale(1.16); }
+    .silo-orb.compromised {
+      background: radial-gradient(circle at 32% 30%, #fca5a5, #ef4444);
+      box-shadow: 0 0 14px rgba(248, 113, 113, 0.7);
+    }
+    .orb-caption { font-size: 11.5px; color: var(--ink-sec); margin-left: 4px; }
+
+    .stage-ctrl {
+      position: absolute; right: 8px; bottom: 8px; z-index: 4;
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--ink-muted); font-size: 11px; padding: 4px 10px; border-radius: 999px; cursor: pointer;
+    }
+    .stage-ctrl:hover { color: var(--ink); border-color: var(--border-strong); }
+
+    .scroll-cue {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      margin-top: 12px; color: var(--accent); font-size: 12px; font-weight: 600;
+      text-decoration: none; opacity: 0.85; transition: opacity 0.2s ease;
+    }
+    .scroll-cue:hover { opacity: 1; }
+    .mouse-ico {
+      width: 20px; height: 31px; border: 2px solid var(--accent); border-radius: 12px;
+      display: flex; justify-content: center; padding-top: 5px;
+    }
+    .mouse-wheel {
+      width: 3px; height: 6px; border-radius: 99px; background: var(--accent);
+      animation: wheelScroll 1.8s ease-in-out infinite;
+    }
+    @keyframes wheelScroll {
+      0%, 100% { transform: translateY(0); opacity: 1; }
+      70% { transform: translateY(7px); opacity: 0.25; }
+    }
+
+    /* Interactive Federation Workbench */
+    .workbench {
+      margin: 26px 0 38px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .wb-header {
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;
+      padding: 16px 22px; background: var(--bg-elev); border-bottom: 1px solid var(--border);
+      cursor: pointer; user-select: none;
+    }
+    .wb-title {
+      display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px;
+    }
+    .wb-meta { display: flex; align-items: center; gap: 12px; font-size: 12.5px; color: var(--ink-sec); }
+    .wb-body {
+      padding: 22px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px;
+    }
+    .wb-body.collapsed { display: none; }
+    .wb-col h3 {
+      font-size: 13px; font-weight: 700; color: var(--ink);
+      padding-bottom: 10px; margin-bottom: 14px; border-bottom: 1px solid var(--border);
+    }
+
+    .field { margin-bottom: 13px; }
+    .field label {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 12.5px; font-weight: 500; color: var(--ink-sec); margin-bottom: 6px;
+    }
+    select, input[type="file"] {
+      width: 100%; padding: 9px 12px; border-radius: 10px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      color: var(--ink); font-size: 13px; font-weight: 500;
+      transition: border-color 0.16s ease;
+    }
+    select:hover, input[type="file"]:hover { border-color: var(--border-strong); }
+
+    input[type="range"] {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 5px; border-radius: 99px; background: var(--surface-2);
+      border: 1px solid var(--border); cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--accent); border: 2px solid var(--bg); cursor: pointer;
+      transition: transform 0.14s ease;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: 6px 0; font-size: 12.8px; color: var(--ink-sec); cursor: pointer;
+    }
+    .toggle-row:hover { color: var(--ink); }
+    .toggle-row input[type="checkbox"] {
+      appearance: none; -webkit-appearance: none;
+      width: 36px; height: 20px; border-radius: 99px; flex-shrink: 0;
+      background: var(--surface-2); border: 1px solid var(--border-strong);
+      position: relative; cursor: pointer; transition: background-color 0.18s ease, border-color 0.18s ease;
+    }
+    .toggle-row input[type="checkbox"]::after {
+      content: ""; position: absolute; top: 2px; left: 2px;
+      width: 14px; height: 14px; border-radius: 50%; background: var(--ink-sec);
+      transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.18s ease;
+    }
+    .toggle-row input[type="checkbox"]:checked {
+      background: var(--accent-soft); border-color: var(--accent);
+    }
+    .toggle-row input[type="checkbox"]:checked::after {
+      transform: translateX(16px); background: var(--accent);
+    }
+
+    /* Views & Section Headings (No kickers/eyebrows, clean hierarchy) */
+    .view-pane { display: none; padding-bottom: 56px; animation: viewEnter 0.24s cubic-bezier(0.22, 1, 0.36, 1); }
+    .view-pane.active { display: block; }
+    @keyframes viewEnter {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .sec-head {
+      display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+      margin: 44px 0 20px;
+    }
+    .sec-head h2 { font-size: clamp(1.45rem, 2.4vw, 1.95rem); font-weight: 700; }
+    .sec-head p { font-size: 14.5px; color: var(--ink-sec); max-width: 62ch; margin-top: 4px; }
+
+    /* Telemetry Bento Strip */
+    .bento-metrics {
+      display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px;
+    }
+    .metric-tile {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 18px;
+      transition: border-color 0.18s ease, transform 0.18s ease;
+    }
+    .metric-tile:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+    .metric-lbl { font-size: 12px; font-weight: 600; color: var(--ink-sec); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+    .metric-val { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); }
+    .metric-sub { font-size: 11.5px; color: var(--ink-muted); margin-top: 6px; }
+
+    /* 5 Institutional Nodes */
+    .nodes-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px;
+    }
+    .node-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between;
+      transition: border-color 0.18s ease, transform 0.18s ease;
+    }
+    .node-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+    .node-card.compromised {
+      background: var(--danger-soft); border-color: var(--danger-border);
+    }
+    .node-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .node-ico {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      color: var(--accent); display: flex; align-items: center; justify-content: center;
+    }
+    .node-card.compromised .node-ico { color: var(--danger); border-color: var(--danger-border); }
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .badge-ok { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent-ring); }
+    .badge-err { background: var(--danger-soft); color: var(--danger); border: 1px solid var(--danger-border); }
+    .badge-neutral { background: var(--surface-2); color: var(--ink-sec); border: 1px solid var(--border); }
+
+    .node-name { font-size: 15px; font-weight: 700; color: var(--ink); }
+    .node-sector { font-size: 12px; color: var(--ink-sec); margin-bottom: 14px; }
+    .node-specs {
+      font-size: 12px; color: var(--ink-sec); line-height: 1.75;
+      padding-top: 12px; border-top: 1px solid var(--border);
+    }
+    .node-specs span { color: var(--ink); font-weight: 500; }
+    .node-foot {
+      margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border);
+      font-size: 11.5px; color: var(--accent); font-weight: 600;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .node-card.compromised .node-foot { color: var(--danger); }
+
+    /* Charts & Panels */
+    .panels-3 { display: grid; grid-template-columns: 1.15fr 1.15fr 0.9fr; gap: 16px; margin-bottom: 20px; }
+    .panels-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .panel {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 20px;
+    }
+    .panel h3 { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
+    .panel p { font-size: 14px; color: var(--ink-sec); line-height: 1.65; }
+
+    /* Confusion Matrix Visual Cells */
+    .cm-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px;
+    }
+    .cm-cell {
+      padding: 14px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--border);
+    }
+    .cm-cell.good { background: var(--accent-soft); border-color: var(--accent-ring); }
+    .cm-cell-lbl { font-size: 11px; color: var(--ink-sec); margin-bottom: 4px; }
+    .cm-cell-val { font-size: 21px; font-weight: 700; color: var(--ink); }
+
+    /* Tables */
+    .table-shell {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; overflow-x: auto;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    th {
+      background: var(--bg-elev); color: var(--ink-sec);
+      font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: rgba(74, 222, 128, 0.03); }
+
+    /* Confidence Bar */
+    .conf-wrap { display: inline-flex; align-items: center; gap: 8px; min-width: 120px; }
+    .conf-bar { flex: 1; height: 6px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+    .conf-fill { height: 100%; border-radius: 99px; background: var(--accent); }
+    .conf-fill.high-risk { background: var(--danger); }
+
+    /* Alert & Merkle Explorer */
+    .verdict-banner {
+      padding: 20px 22px; border-radius: 14px; margin-bottom: 18px;
+      background: var(--accent-soft); border: 1px solid var(--accent-ring);
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+    .verdict-banner.isolated {
+      background: var(--danger-soft); border-color: var(--danger-border);
+    }
+    .verdict-banner h3 { font-size: 16px; margin-bottom: 4px; }
+    .verdict-banner p { font-size: 13.5px; color: var(--ink-sec); }
+
+    .ledger-pre {
+      background: var(--code-bg); color: #d1fae5;
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 16px 18px; font-size: 12.5px; line-height: 1.75; overflow-x: auto;
+    }
+
+    /* Toast Notification */
     .toast {
-      display: none; padding: 14px 20px; border-radius: 14px; font-size: 13.5px; font-weight: 600;
-      margin-bottom: 20px; background: #f0fdf4; border: 1px solid #bbf7d0; color: #14532d;
+      position: fixed; bottom: 24px; right: 24px; z-index: 300;
+      max-width: 440px; padding: 13px 18px; border-radius: 12px;
+      background: var(--surface); color: var(--ink);
+      border: 1px solid var(--accent-ring); box-shadow: var(--shadow-stage);
+      font-size: 13px; font-weight: 500; display: none;
     }
-    .toast.err { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+    .toast.err { border-color: var(--danger-border); color: var(--danger); }
 
-    /* Hero */
-    .hero { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 42px; align-items: center; padding: 34px 0 38px; }
-    .tag {
-      display: inline-block; background: var(--amber-bg); color: var(--amber-ink);
-      font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;
-      padding: 5px 14px; border-radius: 999px; margin-bottom: 16px;
+    /* Open Source Banner & Footer */
+    .oss-banner {
+      margin-top: 32px; padding: 34px; border-radius: 16px;
+      background: linear-gradient(135deg, var(--surface) 0%, var(--bg-elev) 100%);
+      border: 1px solid var(--border-strong);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px;
     }
-    .hero h1 { font-size: 48px; font-weight: 900; letter-spacing: -0.04em; line-height: 1.08; margin-bottom: 16px; }
-    .hero h1 span { color: var(--amber-dark); }
-    .hero p { font-size: 16.5px; color: var(--slate); max-width: 540px; margin-bottom: 20px; }
-    .hero-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-    .fcard {
-      background: #fff; border: 1px solid #f1f5f9; border-radius: 20px; padding: 20px 22px;
-      box-shadow: 0 10px 28px rgba(15,23,42,0.06); position: relative;
+    .oss-banner h3 { font-size: 22px; margin-bottom: 8px; }
+    .oss-banner p { font-size: 14.5px; color: var(--ink-sec); max-width: 64ch; }
+
+    footer {
+      border-top: 1px solid var(--border); padding: 32px 0 44px;
+      color: var(--ink-muted); font-size: 13px;
     }
-    .fcard:nth-child(2), .fcard:nth-child(4) { margin-top: 16px; }
-    .fcard-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 10px; }
-    .fcard-lbl { font-size: 12.5px; font-weight: 700; color: var(--slate); }
-    .fcard-val { font-size: 25px; font-weight: 900; letter-spacing: -0.03em; margin: 3px 0; }
-    .fcard-sub { font-size: 11.5px; color: var(--muted); font-weight: 600; }
-
-    /* Section Headers */
-    .sec-head { text-align: center; max-width: 700px; margin: 42px auto 26px; }
-    .sec-head h2 { font-size: 32px; font-weight: 900; letter-spacing: -0.035em; margin-bottom: 8px; }
-    .sec-head p { font-size: 15px; color: var(--slate); }
-
-    /* KPIs */
-    .kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin: 18px 0; }
-    .kpi {
-      background: #fff; border: 1px solid #f1f5f9; border-radius: 18px; padding: 18px;
-      box-shadow: 0 4px 14px rgba(15,23,42,0.04); border-top: 4px solid var(--ink);
-    }
-    .kpi-lbl { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 6px; }
-    .kpi-val { font-size: 25px; font-weight: 900; letter-spacing: -0.03em; }
-    .kpi-sub { font-size: 11.5px; color: var(--slate); margin-top: 6px; font-weight: 500; }
-
-    /* Silos */
-    .silo-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin: 20px 0; }
-    .silo {
-      background: #fff; border: 1px solid #f1f5f9; border-top: 4px solid var(--green);
-      border-radius: 18px; padding: 20px; box-shadow: 0 4px 14px rgba(15,23,42,0.04);
-      display: flex; flex-direction: column;
-    }
-    .silo.bad { border-top-color: var(--red); background: #fef2f2; }
-    .silo-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .silo-ico { font-size: 24px; background: var(--soft); width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
-    .silo-name { font-weight: 900; font-size: 14.5px; }
-    .silo-sec { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
-    .silo-meta { font-size: 12px; color: #475569; line-height: 1.65; flex: 1; }
-    .silo-foot { margin-top: 12px; padding-top: 10px; border-top: 1px solid #f1f5f9; font-size: 11px; font-weight: 700; color: var(--green); }
-
-    /* Charts & Tables */
-    .chart-grid { display: grid; grid-template-columns: 1.3fr 1.3fr 1fr; gap: 18px; margin: 20px 0; }
-    .card {
-      background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 22px;
-      box-shadow: 0 4px 14px rgba(15,23,42,0.03);
-    }
-    .card h3 { font-size: 15.5px; font-weight: 800; margin-bottom: 12px; }
-    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 16px; margin-top: 16px; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
-    th { background: var(--soft); padding: 11px 14px; font-weight: 800; color: #334155; border-bottom: 1px solid var(--line); white-space: nowrap; }
-    td { padding: 10px 14px; border-bottom: 1px solid #f1f5f9; color: #334155; }
-    tr:last-child td { border-bottom: none; }
-
-    .page { display: none; }
-    .page.active { display: block; }
-
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
-    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 20px 0; }
-
-    .callout-dark {
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      border: 2.5px solid var(--amber); border-radius: 24px; padding: 38px;
-      color: #fff; margin: 38px 0; box-shadow: 0 20px 48px rgba(15,23,42,0.16);
-    }
-    .callout-dark h2 { font-size: 26px; font-weight: 900; line-height: 1.35; margin: 14px 0; }
-    .callout-dark p { color: #cbd5e1; font-size: 15.5px; max-width: 920px; margin-bottom: 24px; }
-    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
-    .cta-link {
-      text-decoration: none; font-weight: 800; font-size: 13.5px; padding: 11px 24px;
-      border-radius: 999px; display: inline-flex; align-items: center; gap: 8px;
+    .foot-inner {
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
     }
 
-    footer { text-align: center; padding: 40px 20px 16px; border-top: 1px solid #f1f5f9; margin-top: 48px; color: var(--muted); font-size: 12.5px; }
-
-    @media (max-width: 980px) {
-      .nav-tabs { grid-template-columns: repeat(2, 1fr); }
-      .config-grid, .hero, .chart-grid, .grid-2, .grid-3 { grid-template-columns: 1fr; }
-      .kpi-grid, .silo-grid { grid-template-columns: repeat(2, 1fr); }
-      .hero h1 { font-size: 36px; }
+    @media (max-width: 1120px) {
+      .hero-grid { grid-template-columns: 1fr; padding-top: 12px; }
+      .stage-wrap { height: 440px; }
+      .wb-body { grid-template-columns: 1fr 1fr; }
+      .bento-metrics { grid-template-columns: repeat(3, 1fr); }
+      .nodes-grid { grid-template-columns: repeat(2, 1fr); }
+      .panels-3 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 760px) {
+      .topbar-inner { height: auto; padding: 12px 18px; flex-wrap: wrap; }
+      .nav-links { order: 3; width: 100%; overflow-x: auto; justify-content: flex-start; }
+      .status-chip { display: none; }
+      .wb-body, .bento-metrics, .nodes-grid, .panels-2 { grid-template-columns: 1fr; }
+      .stage-rig { transform: none; }
+      .stage-dock-left, .stage-chips-right { display: none; }
+      .glass-window { left: 10px; right: 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
     }
   </style>
 </head>
 <body>
-  <header class="navbar">
-    <div class="brand">
-      <span style="font-size:26px;">🛡️</span>
-      <span class="brand-name">AEGIS-FL<sup>™</sup></span>
-      <span class="brand-sub">PPFL-IDS &bull; Sovereign Cyber Collective</span>
-    </div>
-    <div class="badges">
-      <span class="pill pill-green">&#9679; 5 Silos Ready</span>
-      <span id="badge-secagg" class="pill pill-amber">SecAgg+ Unmasked</span>
-      <span id="badge-dp" class="pill pill-purple">Opacus RDP (&epsilon;=9.53)</span>
-      <span id="badge-ledger" class="pill pill-blue">SHA-256 Ledger: Verified</span>
-      <a href="/AEGIS-FL_User_Guide.pdf" target="_blank" rel="noopener" class="pill" style="background:#0f172a; color:#facc15; text-decoration:none;">📄 User Guide (PDF)</a>
+  <a href="#main-content" class="skip-link">Skip to console</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="#overview" class="brand" onclick="switchView('overview'); return false;">
+        <img src="/qelvari-logo.png" alt="Qelvari emblem" width="34" height="34" />
+        <span class="brand-word">Qelvari</span>
+        <span class="brand-ver">v2.5</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Workspace views">
+        <button class="nav-btn active" data-view="overview" onclick="switchView('overview', this)">Overview</button>
+        <button class="nav-btn" data-view="scanner" onclick="switchView('scanner', this)">Flow Scanner</button>
+        <button class="nav-btn" data-view="defense" onclick="switchView('defense', this)">Defense Lab</button>
+        <button class="nav-btn" data-view="crypto" onclick="switchView('crypto', this)">Cryptography</button>
+        <button class="nav-btn" data-view="arch" onclick="switchView('arch', this)">Architecture</button>
+      </nav>
+
+      <div class="nav-right">
+        <div class="status-chip mono" id="top-status-chip" title="Live mesh status">
+          <span class="pulse-dot"></span>
+          <span id="top-status-text">5/5 Silos · RDP ε=9.53</span>
+        </div>
+        <a href="/Qelvari_User_Guide.pdf" target="_blank" rel="noopener" class="icon-btn" title="Open Qelvari User Guide (PDF)" aria-label="Open User Guide PDF">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </a>
+        <button class="icon-btn" id="theme-toggle" onclick="toggleTheme()" title="Switch dark / light theme" aria-label="Switch color theme">
+          <svg id="ico-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </button>
+        <button class="btn-pill btn-solid btn-sm" onclick="focusWorkbench()">Run Mesh</button>
+      </div>
     </div>
   </header>
 
-  <main class="container">
-    <nav class="nav-tabs">
-      <button class="tab-btn active" onclick="switchTab('cmd', this)">Command Center</button>
-      <button class="tab-btn" onclick="switchTab('scan', this)">Live Flow Scanner</button>
-      <button class="tab-btn" onclick="switchTab('def', this)">Defense Lab</button>
-      <button class="tab-btn" onclick="switchTab('priv', this)">Privacy &amp; Crypto</button>
-      <button class="tab-btn" onclick="switchTab('res', this)">Research &amp; SOTA</button>
-    </nav>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <details class="config-box">
-      <summary>
-        <span>⚙️ Experiment Configuration Panel (Live PyTorch + Opacus Fluid Compute Engine)</span>
-        <span style="font-size:12px; color:var(--slate);">Click to expand / collapse</span>
-      </summary>
-      <div class="config-grid">
-        <div class="cfg-col">
-          <h4>Dataset &amp; Backbone</h4>
-          <div class="field">
-            <label>Benchmark Dataset</label>
-            <select id="cfg-dataset" onchange="loadState(this.value)">
-              <option value="unsw">UNSW-NB15 (42 Features)</option>
-              <option value="cicids">CICIDS2017 (78 Features)</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Neural Architecture</label>
-            <select id="cfg-model">
-              <option value="resnet">1D ResNet (Residual)</option>
-              <option value="mlp">Deep MLP (Tabular)</option>
-              <option value="attention">8-Token Feature Attention</option>
-              <option value="autoencoder">Zero-Day Autoencoder (MSE)</option>
-            </select>
-          </div>
-          <label class="chk"><input type="checkbox" id="cfg-multiclass" /> Multi-Class Attack Attribution</label>
-          <label class="chk"><input type="checkbox" id="cfg-noniid" /> Non-IID Skew (Dirichlet &alpha;=0.5)</label>
-          <div class="field">
-            <label>Federated Rounds: <span id="lbl-rounds">3</span></label>
-            <input type="range" id="cfg-rounds" min="2" max="5" value="3" oninput="document.getElementById('lbl-rounds').textContent=this.value" />
-          </div>
-        </div>
-
-        <div class="cfg-col">
-          <h4>Privacy &amp; Cryptography</h4>
-          <label class="chk"><input type="checkbox" id="cfg-dp" checked /> Opacus Per-Sample DP-SGD</label>
-          <div class="field">
-            <label>Clipping Norm (C): <span id="lbl-clip">1.0</span></label>
-            <input type="range" id="cfg-clip" min="0.5" max="5.0" step="0.5" value="1.0" oninput="document.getElementById('lbl-clip').textContent=this.value" />
-          </div>
-          <div class="field">
-            <label>Gaussian Noise (&sigma;): <span id="lbl-sigma">0.65</span></label>
-            <input type="range" id="cfg-sigma" min="0.50" max="1.50" step="0.05" value="0.65" oninput="document.getElementById('lbl-sigma').textContent=this.value" />
-          </div>
-          <label class="chk"><input type="checkbox" id="cfg-secagg" checked /> Drop-Resilient SecAgg+</label>
-          <label class="chk"><input type="checkbox" id="cfg-sparsify" /> Energy-Conserving Top-k (5%)</label>
-          <label class="chk"><input type="checkbox" id="cfg-ldp" /> Local DP (Label Perturbation)</label>
-          <label class="chk"><input type="checkbox" id="cfg-paillier" /> Paillier HE (Head Ciphertext)</label>
-        </div>
-
-        <div class="cfg-col">
-          <h4>Adversarial Attack</h4>
-          <div class="field">
-            <label>Simulate Attack Vector</label>
-            <select id="cfg-attack">
-              <option value="none">None (All Honest)</option>
-              <option value="model_scaling">Model Poisoning (Scaling -25x)</option>
-              <option value="adaptive_poisoning">Stealth Adaptive Norm Poisoning</option>
-              <option value="label_flipping">Data Poisoning (Label Flip)</option>
-              <option value="backdoor">Targeted Backdoor Trigger</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Compromised Silo</label>
-            <select id="cfg-badcid">
-              <option value="0">Client 1 - Bank</option>
-              <option value="1">Client 2 - Hospital</option>
-              <option value="2" selected>Client 3 - Enterprise</option>
-              <option value="3">Client 4 - Government</option>
-              <option value="4">Client 5 - Cloud Provider</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="cfg-col">
-          <h4>Byzantine Defense &amp; Run</h4>
-          <div class="field">
-            <label>Aggregation Defense</label>
-            <select id="cfg-defense">
-              <option value="multi_krum">Multi-Krum (Geometric)</option>
-              <option value="norm_clipping">Norm + Head Sign Guard</option>
-              <option value="cosine_similarity">Cosine Similarity (FLTrust)</option>
-              <option value="flame">FLAME (DBSCAN + Server DP)</option>
-              <option value="reputation">Client Reputation EMA</option>
-              <option value="adaptive_clipping">Adaptive Clip Norm</option>
-              <option value="coordinate_median">Coordinate-Wise Median</option>
-              <option value="trimmed_mean">Trimmed Mean</option>
-              <option value="fedavg">FedAvg (No Defense)</option>
-            </select>
-          </div>
-          <div style="margin-top:22px;">
-            <button id="btn-run" class="btn-primary" onclick="runFederation()">▶ Run Federation Experiment</button>
-          </div>
-          <p style="font-size:11.5px; color:var(--muted); margin-top:10px;">Executes real PyTorch + Opacus DP-SGD + Pedersen + SecAgg+ rounds on Vercel Fluid Compute.</p>
-        </div>
-      </div>
-    </details>
-
-    <div id="toast" class="toast"></div>
-
-    <!-- PAGE 1: COMMAND CENTER -->
-    <section id="page-cmd" class="page active">
-      <div class="hero">
-        <div>
-          <span class="tag">OPEN RESEARCH EDITION V2.5</span>
-          <h1>Cyber Defense,<br /><span>Zero Data Leakage.</span></h1>
-          <p>Cross-silo collaborative intrusion defense powering <strong>Banks, Hospitals, Enterprises, Defense Agencies, and Cloud Providers</strong> with Opacus per-sample DP-SGD, verifiable homomorphic commitments, and drop-resilient SecAgg+.</p>
-          <div style="font-size:13px; font-weight:700; color:var(--slate);">
-            <span style="color:var(--amber-dark); letter-spacing:2px;">★★★★★</span> &nbsp;Zero-Leakage Federated Scaling &bull; Drop-Resilient SecAgg+ &bull; Live .pt SOC Scanner
-          </div>
-        </div>
-        <div class="hero-cards">
-          <div class="fcard">
-            <div class="fcard-icon" style="background:var(--amber-bg);">🎯</div>
-            <div class="fcard-lbl">Global Accuracy</div>
-            <div class="fcard-val" id="hero-acc">91.93%</div>
-            <div class="fcard-sub" id="hero-round">Round 3 Benchmark</div>
-          </div>
-          <div class="fcard">
-            <div class="fcard-icon" style="background:#f0fdf4;">🔒</div>
-            <div class="fcard-lbl">Tight Rényi DP</div>
-            <div class="fcard-val" id="hero-eps">&epsilon; = 9.53</div>
-            <div class="fcard-sub">Opacus Per-Sample (&delta; = 1e-5)</div>
-          </div>
-          <div class="fcard">
-            <div class="fcard-icon" style="background:var(--purple-bg);">🛡️</div>
-            <div class="fcard-lbl">ROC-AUC Score</div>
-            <div class="fcard-val" id="hero-auc">0.9351</div>
-            <div class="fcard-sub" id="hero-fpr">False Positive Rate: 7.58%</div>
-          </div>
-          <div class="fcard">
-            <div class="fcard-icon" style="background:var(--blue-bg);">⚡</div>
-            <div class="fcard-lbl">Detection Precision</div>
-            <div class="fcard-val" id="hero-prec">91.99%</div>
-            <div class="fcard-sub" id="hero-f1">Weighted F1: 0.9195</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="sec-head">
-        <span class="tag">SOC TELEMETRY</span>
-        <h2>Global Performance &amp; Alert Fidelity</h2>
-        <p>Live federated metrics across Accuracy, Precision, Recall, ROC-AUC, False Positive Rate, and Rényi DP expenditure.</p>
-      </div>
-
-      <div class="kpi-grid">
-        <div class="kpi" style="border-top-color:#0f172a;"><div class="kpi-lbl">Accuracy</div><div class="kpi-val" id="k-acc">91.93%</div><div class="kpi-sub" id="k-rnd">Round 3</div></div>
-        <div class="kpi" style="border-top-color:#facc15;"><div class="kpi-lbl">Precision</div><div class="kpi-val" id="k-prec">91.99%</div><div class="kpi-sub">Alert Fidelity</div></div>
-        <div class="kpi" style="border-top-color:#2563eb;"><div class="kpi-lbl">Recall</div><div class="kpi-val" id="k-rec">91.93%</div><div class="kpi-sub">Catch Rate</div></div>
-        <div class="kpi" style="border-top-color:#16a34a;"><div class="kpi-lbl">ROC-AUC</div><div class="kpi-val" id="k-auc">0.9351</div><div class="kpi-sub" id="k-f1">F1: 0.9195</div></div>
-        <div class="kpi" style="border-top-color:#dc2626;"><div class="kpi-lbl">False Positive Rate</div><div class="kpi-val" id="k-fpr">7.58%</div><div class="kpi-sub">SOC Noise Floor</div></div>
-        <div class="kpi" style="border-top-color:#7c3aed;"><div class="kpi-lbl">Privacy (&epsilon;_RDP)</div><div class="kpi-val" id="k-eps">9.53</div><div class="kpi-sub">Opacus (&delta;=1e-5)</div></div>
-      </div>
-
-      <div class="sec-head">
-        <span class="tag">INSTITUTIONAL MESH</span>
-        <h2>5 Sovereign SuperNodes</h2>
-        <p>Each institution trains inside its legal perimeter; only masked, DP-clipped weight updates leave.</p>
-      </div>
-      <div id="silo-grid" class="silo-grid"></div>
-
-      <div class="sec-head">
-        <span class="tag">CONVERGENCE &amp; CONFUSION MATRIX</span>
-        <h2>Round-by-Round Progression</h2>
-      </div>
-      <div class="chart-grid">
-        <div class="card"><h3>Accuracy &amp; F1 Progression</h3><canvas id="chart-acc" height="190"></canvas></div>
-        <div class="card"><h3>Cross-Entropy / MSE Loss Decay</h3><canvas id="chart-loss" height="190"></canvas></div>
-        <div class="card">
-          <h3>Held-Out Confusion Matrix</h3>
-          <div id="cm-box" class="table-wrap"></div>
-        </div>
-      </div>
-
-      <div class="table-wrap"><table id="tbl-history"><thead></thead><tbody></tbody></table></div>
-    </section>
-
-    <!-- PAGE 2: LIVE FLOW SCANNER -->
-    <section id="page-scan" class="page">
-      <div style="padding:28px 0 18px;">
-        <span class="tag">REAL-TIME SOC INFERENCE</span>
-        <h1 style="font-size:40px; font-weight:900; letter-spacing:-0.04em; margin-bottom:10px;">Live Network Flow <span style="color:var(--amber-dark);">Intrusion Scanner</span></h1>
-        <p style="color:var(--slate); max-width:720px;">Scans live subnet traffic or uploaded UNSW-NB15 / CICIDS2017 CSVs using the persisted global PyTorch checkpoint (<code>latest_global.pt</code>) and zero-leakage federated preprocessor.</p>
-      </div>
-
-      <div class="card" style="margin-bottom:20px;">
-        <div class="grid-3" style="margin:0; align-items:end;">
-          <div class="field" style="margin:0;">
-            <label>Optional: Upload Flow CSV (UNSW-NB15 / CICIDS2017 / Custom)</label>
-            <input type="file" id="scan-file" accept=".csv" />
-          </div>
-          <div>
-            <div class="field" style="margin-bottom:8px;">
-              <label>Sample Batch Size (if no CSV uploaded): <span id="lbl-scan-n">60</span> flows</label>
-              <input type="range" id="scan-count" min="20" max="200" step="10" value="60" oninput="document.getElementById('lbl-scan-n').textContent=this.value" />
+  <main id="main-content">
+    <!-- VIEW 1: OVERVIEW & LIVE CONSOLE -->
+    <section id="view-overview" class="view-pane active">
+      <div class="hero-sec">
+        <div class="hero-ambient"></div>
+        <div class="wrap">
+          <div class="hero-grid">
+            <div class="hero-copy">
+              <div class="hero-pill">Federated Intrusion Detection Mesh</div>
+              <h1>
+                Five Silos.<br />
+                Zero Raw Logs.<br />
+                <span class="hero-accent-line">One Immune Mesh.</span>
+              </h1>
+              <p class="hero-lead">
+                Train PyTorch intrusion detectors across Banks, Hospitals, Enterprises, Defense Agencies, and Cloud Providers without transmitting raw packet captures. Protected by Opacus per-sample DP-SGD, drop-resilient SecAgg+, and Byzantine outlier isolation.
+              </p>
+              <div class="hero-actions">
+                <button class="btn-pill btn-solid" onclick="focusWorkbench()">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+                  Launch Federation
+                </button>
+                <button class="btn-pill btn-ghost" onclick="switchView('scanner')">
+                  Inspect Flow Scanner
+                </button>
+                <a class="btn-pill btn-ghost" href="/Qelvari_User_Guide.pdf" target="_blank" rel="noopener">
+                  User Guide PDF
+                </a>
+              </div>
+              <div class="hero-proof mono">
+                <span>Accuracy <strong id="hero-acc">91.93%</strong></span>
+                <span>Tight RDP <strong id="hero-eps">ε = 9.53</strong></span>
+                <span>ROC-AUC <strong id="hero-auc">0.9351</strong></span>
+                <span>Ledger <strong id="hero-ledger">Verified</strong></span>
+              </div>
             </div>
-            <label class="chk" style="margin:0;"><input type="checkbox" id="scan-mia" /> Enable MIA Laplace Logit Defense (&epsilon;=1.0)</label>
+
+            <!-- Interactive 3D WebGL + Isometric Floating Console Stage -->
+            <div class="stage-wrap" id="hero-stage">
+              <svg class="stage-ring-svg" viewBox="0 0 560 500" fill="none" aria-hidden="true">
+                <circle cx="280" cy="250" r="215" stroke="currentColor" stroke-opacity="0.12" stroke-dasharray="4 6"/>
+                <circle cx="280" cy="250" r="158" stroke="currentColor" stroke-opacity="0.10"/>
+              </svg>
+              <canvas id="qelvari-3d" aria-label="Interactive 3D federated cryptographic lattice"></canvas>
+
+              <div class="stage-rig" id="stage-rig">
+                <div class="stage-dock-left" aria-label="Quick view switcher">
+                  <button class="dock-tool active" title="Federation Console" onclick="focusWorkbench()">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+                  </button>
+                  <button class="dock-tool" title="Live Flow Scanner" onclick="switchView('scanner')">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  </button>
+                  <button class="dock-tool" title="Byzantine Defense Lab" onclick="switchView('defense')">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  </button>
+                  <button class="dock-tool" title="Zero-Leakage Cryptography" onclick="switchView('crypto')">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  </button>
+                  <button class="dock-tool" title="System Architecture" onclick="switchView('arch')">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                  </button>
+                </div>
+
+                <div class="glass-window">
+                  <div class="win-top">
+                    <span class="win-brand">
+                      <img src="/qelvari-logo.png" alt="" />
+                      Qelvari Consensus Core
+                    </span>
+                    <span class="mono" id="stage-round-lbl">ROUND 3 · UNSW</span>
+                  </div>
+                  <div class="win-metrics">
+                    <div class="win-stat">
+                      <div class="win-stat-lbl">Global Detection</div>
+                      <div class="win-stat-val num" id="stage-acc">91.93%</div>
+                    </div>
+                    <div class="win-stat">
+                      <div class="win-stat-lbl">Alert Precision</div>
+                      <div class="win-stat-val num" id="stage-prec">91.99%</div>
+                    </div>
+                  </div>
+                  <div class="win-wave">
+                    <div>
+                      <div style="font-size:11px; color:var(--ink-sec);">Active Consensus Filter</div>
+                      <div class="mono" style="font-size:12.5px; font-weight:600; color:var(--accent);" id="stage-def">multi_krum · verified</div>
+                    </div>
+                    <svg width="128" height="36" viewBox="0 0 128 36" fill="none" aria-hidden="true">
+                      <path d="M2 30 C24 28, 38 16, 62 13 C86 10, 102 6, 126 4" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/>
+                      <circle cx="126" cy="4" r="3.5" fill="var(--accent-lime)"/>
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="stage-chips-right">
+                  <div class="float-chip">
+                    <span class="chip-dot"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    <span id="chip-dp">Opacus RDP (ε=9.53)</span>
+                  </div>
+                  <div class="float-chip">
+                    <span class="chip-dot"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+                    <span id="chip-secagg">SecAgg+ Unmasked</span>
+                  </div>
+                  <div class="float-chip">
+                    <span class="chip-dot"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+                    <span id="chip-ledger">SHA-256 Chain Intact</span>
+                  </div>
+                </div>
+
+                <div class="stage-orbs-bottom" id="stage-orbs">
+                  <span class="silo-orb" title="Client 1 - Bank"></span>
+                  <span class="silo-orb" title="Client 2 - Hospital"></span>
+                  <span class="silo-orb" title="Client 3 - Enterprise"></span>
+                  <span class="silo-orb" title="Client 4 - Government"></span>
+                  <span class="silo-orb" title="Client 5 - Cloud Provider"></span>
+                  <span class="orb-caption mono" id="orb-status-lbl">5/5 Honest</span>
+                </div>
+              </div>
+
+              <button class="stage-ctrl mono" id="btn-3d-pause" onclick="toggle3DMotion()">Pause 3D</button>
+            </div>
           </div>
+
+          <a href="#workbench" class="scroll-cue">
+            <span class="mouse-ico"><span class="mouse-wheel"></span></span>
+            <span>Scroll to Workbench</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="wrap">
+        <!-- Interactive Federation Workbench (Shared Anchor) -->
+        <div id="workbench" class="workbench">
+          <div class="wb-header" onclick="toggleWorkbench()">
+            <div class="wb-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.9"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              <span>Federation Simulation Workbench</span>
+              <span class="badge badge-ok">PyTorch + Opacus Engine</span>
+            </div>
+            <div class="wb-meta">
+              <span id="wb-toggle-lbl">Collapse Parameters</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+
+          <div id="wb-body" class="wb-body">
+            <div class="wb-col">
+              <h3>Dataset &amp; Neural Backbone</h3>
+              <div class="field">
+                <label for="cfg-dataset">Benchmark Schema</label>
+                <select id="cfg-dataset" onchange="loadState(this.value)">
+                  <option value="unsw">UNSW-NB15 (42 Features)</option>
+                  <option value="cicids">CICIDS2017 (78 Features)</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="cfg-model">Model Architecture</label>
+                <select id="cfg-model">
+                  <option value="resnet">1D ResNet (Residual)</option>
+                  <option value="mlp">Deep MLP (Tabular)</option>
+                  <option value="attention">8-Token Feature Attention</option>
+                  <option value="autoencoder">Zero-Day Autoencoder (MSE)</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="cfg-rounds"><span>Federated Rounds</span><span class="mono" id="lbl-rounds">3</span></label>
+                <input type="range" id="cfg-rounds" min="2" max="5" value="3" oninput="document.getElementById('lbl-rounds').textContent=this.value" />
+              </div>
+              <label class="toggle-row"><span>Multi-Class Attribution</span><input type="checkbox" id="cfg-multiclass" /></label>
+              <label class="toggle-row"><span>Non-IID Skew (Dirichlet α=0.5)</span><input type="checkbox" id="cfg-noniid" /></label>
+            </div>
+
+            <div class="wb-col">
+              <h3>Privacy &amp; Cryptography</h3>
+              <label class="toggle-row"><span>Opacus Per-Sample DP-SGD</span><input type="checkbox" id="cfg-dp" checked /></label>
+              <div class="field" style="margin-top:8px;">
+                <label for="cfg-clip"><span>Clipping Norm (C)</span><span class="mono" id="lbl-clip">1.0</span></label>
+                <input type="range" id="cfg-clip" min="0.5" max="5.0" step="0.5" value="1.0" oninput="document.getElementById('lbl-clip').textContent=this.value" />
+              </div>
+              <div class="field">
+                <label for="cfg-sigma"><span>Gaussian Noise (σ)</span><span class="mono" id="lbl-sigma">0.65</span></label>
+                <input type="range" id="cfg-sigma" min="0.50" max="1.50" step="0.05" value="0.65" oninput="document.getElementById('lbl-sigma').textContent=this.value" />
+              </div>
+              <label class="toggle-row"><span>Drop-Resilient SecAgg+</span><input type="checkbox" id="cfg-secagg" checked /></label>
+              <label class="toggle-row"><span>Energy-Conserving Top-k (5%)</span><input type="checkbox" id="cfg-sparsify" /></label>
+              <label class="toggle-row"><span>Local DP (Label Perturbation)</span><input type="checkbox" id="cfg-ldp" /></label>
+              <label class="toggle-row"><span>Paillier HE (Output Head)</span><input type="checkbox" id="cfg-paillier" /></label>
+            </div>
+
+            <div class="wb-col">
+              <h3>Adversarial Red-Team</h3>
+              <div class="field">
+                <label for="cfg-attack">Attack Vector</label>
+                <select id="cfg-attack">
+                  <option value="none">None (All 5 Silos Honest)</option>
+                  <option value="model_scaling">Model Poisoning (Scaling -25x)</option>
+                  <option value="adaptive_poisoning">Stealth Adaptive Norm Poisoning</option>
+                  <option value="label_flipping">Data Poisoning (Label Flip)</option>
+                  <option value="backdoor">Targeted Backdoor Trigger</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="cfg-badcid">Target Compromised Silo</label>
+                <select id="cfg-badcid">
+                  <option value="0">Client 1 - Bank</option>
+                  <option value="1">Client 2 - Hospital</option>
+                  <option value="2" selected>Client 3 - Enterprise</option>
+                  <option value="3">Client 4 - Government</option>
+                  <option value="4">Client 5 - Cloud Provider</option>
+                </select>
+              </div>
+              <p style="font-size:12px; color:var(--ink-muted); margin-top:8px;">
+                Simulates an insider breach inside one sovereign institution during local weight computation.
+              </p>
+            </div>
+
+            <div class="wb-col">
+              <h3>Byzantine Consensus &amp; Execute</h3>
+              <div class="field">
+                <label for="cfg-defense">Aggregation Defense</label>
+                <select id="cfg-defense">
+                  <option value="multi_krum">Multi-Krum (Geometric)</option>
+                  <option value="norm_clipping">Norm + Head Sign Guard</option>
+                  <option value="cosine_similarity">Cosine Similarity (FLTrust)</option>
+                  <option value="flame">FLAME (Clustering + Clip)</option>
+                  <option value="reputation">Client Reputation EMA</option>
+                  <option value="adaptive_clipping">Adaptive Clip Norm</option>
+                  <option value="coordinate_median">Coordinate-Wise Median</option>
+                  <option value="trimmed_mean">Trimmed Mean</option>
+                  <option value="fedavg">FedAvg (Unprotected Baseline)</option>
+                </select>
+              </div>
+              <button id="btn-run" class="btn-pill btn-solid" style="width:100%; margin-top:12px;" onclick="runFederation()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+                Run Federation Experiment
+              </button>
+              <p class="mono" id="run-timer-note" style="font-size:11.5px; color:var(--ink-muted); margin-top:10px;">
+                Executes live PyTorch + Opacus + Pedersen + SecAgg+ rounds.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Telemetry Strip -->
+        <div class="sec-head" style="margin-top:18px;">
           <div>
-            <button id="btn-scan" class="btn-primary" onclick="runFlowScan()">🔍 Scan Network Flows Now</button>
+            <h2>Global Detection Telemetry</h2>
+            <p>Held-out evaluation across Accuracy, Precision, Recall, ROC-AUC, False Positive Rate, and Rényi Differential Privacy.</p>
+          </div>
+        </div>
+
+        <div class="bento-metrics">
+          <div class="metric-tile">
+            <div class="metric-lbl"><span>Accuracy</span><span class="badge badge-ok" id="k-rnd">R3</span></div>
+            <div class="metric-val num" id="k-acc">91.93%</div>
+            <div class="metric-sub">Global Test Set</div>
+          </div>
+          <div class="metric-tile">
+            <div class="metric-lbl"><span>Precision</span></div>
+            <div class="metric-val num" id="k-prec">91.99%</div>
+            <div class="metric-sub">Alert Fidelity</div>
+          </div>
+          <div class="metric-tile">
+            <div class="metric-lbl"><span>Recall</span></div>
+            <div class="metric-val num" id="k-rec">91.93%</div>
+            <div class="metric-sub">Intrusion Catch Rate</div>
+          </div>
+          <div class="metric-tile">
+            <div class="metric-lbl"><span>ROC-AUC</span></div>
+            <div class="metric-val num" id="k-auc">0.9351</div>
+            <div class="metric-sub num" id="k-f1">Weighted F1: 0.9195</div>
+          </div>
+          <div class="metric-tile">
+            <div class="metric-lbl"><span>False Positive Rate</span></div>
+            <div class="metric-val num" id="k-fpr">7.58%</div>
+            <div class="metric-sub">Benign Misclassified</div>
+          </div>
+          <div class="metric-tile">
+            <div class="metric-lbl"><span>Tight Rényi DP</span></div>
+            <div class="metric-val num" id="k-eps">9.53</div>
+            <div class="metric-sub">ε at δ = 10⁻⁵</div>
+          </div>
+        </div>
+
+        <!-- 5 Sovereign Institutional Nodes -->
+        <div class="sec-head">
+          <div>
+            <h2>Institutional SuperNodes</h2>
+            <p>Each participating organization trains inside its own network perimeter; zero raw flow records cross boundaries.</p>
+          </div>
+        </div>
+        <div id="silo-grid" class="nodes-grid"></div>
+
+        <!-- Convergence & Confusion Matrix -->
+        <div class="sec-head">
+          <div>
+            <h2>Round-by-Round Convergence &amp; Confusion Matrix</h2>
+            <p>Global accuracy, weighted F1, loss decay, and held-out classification distribution across federated rounds.</p>
+          </div>
+        </div>
+
+        <div class="panels-3">
+          <div class="panel">
+            <h3>Accuracy &amp; F1 Trajectory</h3>
+            <canvas id="chart-acc" height="195"></canvas>
+          </div>
+          <div class="panel">
+            <h3>Objective Loss Decay</h3>
+            <canvas id="chart-loss" height="195"></canvas>
+          </div>
+          <div class="panel">
+            <h3>Held-Out Confusion Matrix</h3>
+            <div id="cm-box"></div>
+          </div>
+        </div>
+
+        <div class="table-shell">
+          <table id="tbl-history" class="mono"><thead></thead><tbody></tbody></table>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: LIVE FLOW SCANNER -->
+    <section id="view-scanner" class="view-pane">
+      <div class="wrap">
+        <div class="sec-head" style="margin-top:34px;">
+          <div>
+            <h1 style="font-size:clamp(2rem, 3.4vw, 2.75rem);">Live Network Flow Scanner</h1>
+            <p>Classify network traffic batches or custom UNSW-NB15 / CICIDS2017 CSV captures using the persisted global PyTorch checkpoint (<code>latest_global.pt</code>).</p>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-bottom:20px;">
+          <div style="display:grid; grid-template-columns: 1.2fr 1fr auto; gap:20px; align-items:end;">
+            <div class="field" style="margin:0;">
+              <label for="scan-file">Upload Network Flow CSV (UNSW-NB15 / CICIDS2017 / Custom, max 4.2 MB)</label>
+              <input type="file" id="scan-file" accept=".csv" />
+            </div>
+            <div>
+              <div class="field" style="margin-bottom:8px;">
+                <label for="scan-count"><span>Sample Batch Size (when no CSV uploaded)</span><span class="mono"><span id="lbl-scan-n">60</span> flows</span></label>
+                <input type="range" id="scan-count" min="20" max="200" step="10" value="60" oninput="document.getElementById('lbl-scan-n').textContent=this.value" />
+              </div>
+              <label class="toggle-row" style="padding:0;">
+                <span>Enable MIA Laplace Logit Defense (ε = 1.0)</span>
+                <input type="checkbox" id="scan-mia" />
+              </label>
+            </div>
+            <div>
+              <button id="btn-scan" class="btn-pill btn-solid" onclick="runFlowScan()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Scan Network Flows
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="scan-kpis" class="bento-metrics" style="grid-template-columns:repeat(4,1fr); display:none; margin-bottom:18px;"></div>
+
+        <div id="scan-actions" style="display:none; margin-bottom:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div class="nav-links" id="scan-filter-bar">
+              <button class="nav-btn active" onclick="filterScanRows('ALL', this)">All Flows</button>
+              <button class="nav-btn" onclick="filterScanRows('INTRUSION', this)">Intrusions Only</button>
+              <button class="nav-btn" onclick="filterScanRows('BENIGN', this)">Benign Only</button>
+            </div>
+            <button class="btn-pill btn-ghost btn-sm" onclick="downloadScanCsv()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export SOC Report (CSV)
+            </button>
+          </div>
+        </div>
+
+        <div id="scan-empty" class="panel" style="text-align:center; padding:48px 24px;">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6" style="margin-bottom:12px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <h3>Ready to Inspect Subnet Flows</h3>
+          <p style="max-width:48ch; margin:6px auto 0;">Click <strong>Scan Network Flows</strong> above to classify held-out packet flows or upload your own CSV capture.</p>
+        </div>
+
+        <div id="scan-table-wrap" class="table-shell" style="display:none;">
+          <table id="tbl-scan"><thead></thead><tbody></tbody></table>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: DEFENSE LAB -->
+    <section id="view-defense" class="view-pane">
+      <div class="wrap">
+        <div class="sec-head" style="margin-top:34px;">
+          <div>
+            <h1 style="font-size:clamp(2rem, 3.4vw, 2.75rem);">Byzantine Attack &amp; Defense Lab</h1>
+            <p>Evaluate model scaling (-25x), stealth norm-bounded poisoning, label flipping, and targeted backdoors against head-aware consensus filters.</p>
+          </div>
+          <button class="btn-pill btn-ghost btn-sm" onclick="switchView('overview'); setTimeout(focusWorkbench, 80);">Configure Attack Scenario</button>
+        </div>
+
+        <div id="def-alert" class="verdict-banner"></div>
+
+        <div class="panel" style="margin-bottom:24px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
+            <div>
+              <h3 style="margin-bottom:2px;">SHA-256 Cryptographic Merkle Audit Ledger</h3>
+              <p style="font-size:13px;">Immutable hash-chained round blocks linking global accuracy, participant commitments, and SecAgg+ unmasking proofs.</p>
+            </div>
+            <button class="btn-pill btn-ghost btn-sm" onclick="verifyLedger()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2"><polyline points="20 6 9 17 4 12"/></svg>
+              Verify Hash Chain Integrity
+            </button>
+          </div>
+          <pre id="ledger-code" class="ledger-pre">Loading cryptographic hash chain...</pre>
+        </div>
+
+        <div class="sec-head" style="margin-top:28px;">
+          <div>
+            <h2>Empirical &amp; Live Session Defense Matrix</h2>
+          </div>
+        </div>
+        <div class="table-shell">
+          <table>
+            <thead>
+              <tr><th>Scenario</th><th>Attack Vector</th><th>Defense Filter</th><th>Global Accuracy</th><th>Precision</th><th>Isolated Silos</th></tr>
+            </thead>
+            <tbody id="def-matrix-body" class="mono"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 4: CRYPTOGRAPHY & SCHEMAS -->
+    <section id="view-crypto" class="view-pane">
+      <div class="wrap">
+        <div class="sec-head" style="margin-top:34px;">
+          <div>
+            <h1 style="font-size:clamp(2rem, 3.4vw, 2.75rem);">Zero-Leakage Cryptographic Pipeline</h1>
+            <p>Five layered statistical and cryptographic controls ensuring raw network telemetry remains strictly inside institutional boundaries.</p>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-bottom:20px;">
+          <h3>End-to-End Federated Signal Path</h3>
+          <svg viewBox="0 0 960 118" width="100%" height="118" fill="none" style="margin-top:8px;" role="img" aria-label="Qelvari cryptographic pipeline diagram">
+            <rect x="8" y="24" width="168" height="70" rx="12" fill="var(--surface-2)" stroke="var(--border-strong)"/>
+            <text x="92" y="54" text-anchor="middle" fill="var(--ink)" font-size="13" font-weight="700" font-family="Space Grotesk, sans-serif">1. Local Silo SGD</text>
+            <text x="92" y="74" text-anchor="middle" fill="var(--ink-sec)" font-size="11" font-family="JetBrains Mono, monospace">Sufficient Stats Only</text>
+
+            <line x1="176" y1="59" x2="212" y2="59" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 4"/>
+
+            <rect x="212" y="24" width="174" height="70" rx="12" fill="var(--surface-2)" stroke="var(--border-strong)"/>
+            <text x="299" y="54" text-anchor="middle" fill="var(--ink)" font-size="13" font-weight="700" font-family="Space Grotesk, sans-serif">2. Opacus DP-SGD</text>
+            <text x="299" y="74" text-anchor="middle" fill="var(--accent)" font-size="11" font-family="JetBrains Mono, monospace">Clip C + Noise σ (RDP)</text>
+
+            <line x1="386" y1="59" x2="422" y2="59" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 4"/>
+
+            <rect x="422" y="24" width="174" height="70" rx="12" fill="var(--surface-2)" stroke="var(--border-strong)"/>
+            <text x="509" y="54" text-anchor="middle" fill="var(--ink)" font-size="13" font-weight="700" font-family="Space Grotesk, sans-serif">3. Pedersen + SecAgg+</text>
+            <text x="509" y="74" text-anchor="middle" fill="var(--ink-sec)" font-size="11" font-family="JetBrains Mono, monospace">g^v h^r mod p · ±s_ij</text>
+
+            <line x1="596" y1="59" x2="632" y2="59" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 4"/>
+
+            <rect x="632" y="24" width="160" height="70" rx="12" fill="var(--surface-2)" stroke="var(--border-strong)"/>
+            <text x="712" y="54" text-anchor="middle" fill="var(--ink)" font-size="13" font-weight="700" font-family="Space Grotesk, sans-serif">4. Byzantine Screen</text>
+            <text x="712" y="74" text-anchor="middle" fill="var(--ink-sec)" font-size="11" font-family="JetBrains Mono, monospace">Multi-Krum / FLAME</text>
+
+            <line x1="792" y1="59" x2="824" y2="59" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 4"/>
+
+            <rect x="824" y="24" width="128" height="70" rx="12" fill="var(--accent-soft)" stroke="var(--accent-ring)"/>
+            <text x="888" y="54" text-anchor="middle" fill="var(--ink)" font-size="13" font-weight="700" font-family="Space Grotesk, sans-serif">5. Global .pt</text>
+            <text x="888" y="74" text-anchor="middle" fill="var(--accent)" font-size="11" font-family="JetBrains Mono, monospace">SHA-256 Block</text>
+          </svg>
+        </div>
+
+        <div class="panels-2" style="margin-bottom:18px;">
+          <div class="panel">
+            <h3>Opacus Per-Sample DP-SGD &amp; Tight Rényi Accounting</h3>
+            <p>Bounds individual record sensitivity via <code>GradSampleModule</code> per-sample gradient clipping and composes Poisson-subsampled Gaussian Rényi orders α ∈ [1.25, 128] at δ = 10⁻⁵, paired with Warner Randomized Response Local DP and Laplace MIA logit defense.</p>
+          </div>
+          <div class="panel">
+            <h3>Drop-Resilient SecAgg+ &amp; RFC 3526 Pedersen Commitments</h3>
+            <p>Silo pairs inject zero-sum masks (<code>+s_ij</code>, <code>-s_ij</code>). When Byzantine consensus drops an outlier node, surviving peers cancel only disconnected shares while verifying 1536-bit discrete-log homomorphic commitments (<code>C = g^v h^r mod p</code>) and optional 1024-bit Paillier HE.</p>
+          </div>
+          <div class="panel">
+            <h3>UNSW-NB15 Flow Schema (42 Features · 10 Classes)</h3>
+            <p style="margin-bottom:12px;">Zero-leakage sufficient-statistics standardization and multi-class attribution across Normal traffic and 9 attack families:</p>
+            <div id="tags-unsw" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+          </div>
+          <div class="panel">
+            <h3>CICIDS2017 Official CICFlowMeter Schema (78 Features · 15 Classes)</h3>
+            <p style="margin-bottom:12px;">Full 78-feature CICFlowMeter header ingestion with automatic normalization of raw ISCX packet flow exports:</p>
+            <div id="tags-cicids" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
           </div>
         </div>
       </div>
-
-      <div id="scan-kpis" class="kpi-grid" style="grid-template-columns:repeat(4,1fr); display:none;"></div>
-      <div id="scan-actions" style="margin:12px 0; display:none;">
-        <button class="tab-btn" onclick="downloadScanCsv()">⬇ Download SOC Intrusion Report (CSV)</button>
-      </div>
-      <div id="scan-table-wrap" class="table-wrap" style="display:none;"><table id="tbl-scan"><thead></thead><tbody></tbody></table></div>
     </section>
 
-    <!-- PAGE 3: DEFENSE LAB -->
-    <section id="page-def" class="page">
-      <div style="padding:28px 0 18px;">
-        <span class="tag">ADVERSARIAL INTELLIGENCE</span>
-        <h1 style="font-size:40px; font-weight:900; letter-spacing:-0.04em; margin-bottom:10px;">Attack &amp; Defense <span style="color:var(--amber-dark);">Laboratory</span></h1>
-        <p style="color:var(--slate); max-width:680px;">Stress-test scaling (-25x), stealth norm-bounded poisoning, label flipping, and backdoor triggers against head-aware Byzantine consensus.</p>
-      </div>
-
-      <div id="def-alert" class="card" style="border-left:5px solid var(--green); margin-bottom:20px;"></div>
-
-      <div class="card" style="border-top:4px solid var(--purple); margin-bottom:24px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:12px;">
-          <h3 style="margin:0;">SHA-256 Cryptographic Merkle Audit Ledger</h3>
-          <button class="tab-btn" onclick="verifyLedger()">✓ Verify Hash Chain Integrity</button>
+    <!-- VIEW 5: ARCHITECTURE & SOTA -->
+    <section id="view-arch" class="view-pane">
+      <div class="wrap">
+        <div class="sec-head" style="margin-top:34px;">
+          <div>
+            <h1 style="font-size:clamp(2rem, 3.4vw, 2.75rem);">Qelvari vs. Legacy Intrusion Detection</h1>
+            <p>Architectural comparison across centralized SIEM data lakes, static threat-intelligence feeds, early federated learning, and Qelvari v2.5.</p>
+          </div>
         </div>
-        <pre id="ledger-code" style="background:#0f172a; color:#f8fafc; padding:14px 18px; border-radius:12px; font-size:12.5px; overflow-x:auto;">Loading cryptographic hash chain...</pre>
-      </div>
 
-      <div class="sec-head">
-        <span class="tag">EMPIRICAL &amp; LIVE BENCHMARKS</span>
-        <h2>Attack vs. Defense Matrix</h2>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Scenario</th><th>Attack Vector</th><th>Defense Strategy</th><th>Global Accuracy</th><th>Precision</th><th>Flagged Silos</th></tr></thead>
-          <tbody id="def-matrix-body"></tbody>
-        </table>
-      </div>
-    </section>
+        <div class="panels-3" style="grid-template-columns:repeat(3,1fr); margin-bottom:22px;">
+          <div class="panel">
+            <h3>Centralized Cloud SIEM / EDR</h3>
+            <p class="mono" style="font-size:11.5px; color:var(--warn); margin-bottom:8px;">DATA RESIDENCY &amp; BREACH SURFACE</p>
+            <p>Requires streaming raw NetFlow and endpoint logs into third-party vendor clouds, creating HIPAA/GDPR sovereignty friction and single-point honeypot exposure.</p>
+          </div>
+          <div class="panel">
+            <h3>Static IOC Feeds (STIX / TAXII)</h3>
+            <p class="mono" style="font-size:11.5px; color:var(--danger); margin-bottom:8px;">REACTIVE POST-COMPROMISE SIGNATURES</p>
+            <p>Shares static IP blacklists and file hashes hours or days after an incident, failing to generalize against zero-day behavioral or polymorphic network attacks.</p>
+          </div>
+          <div class="panel">
+            <h3>Early Federated Learning (FedAvg)</h3>
+            <p class="mono" style="font-size:11.5px; color:var(--danger); margin-bottom:8px;">BLINDED SERVER DILEMMA</p>
+            <p>A single poisoned participant corrupts global weights, centralized feature scalers leak cross-silo distributions, and dropping outliers breaks vanilla SecAgg masks.</p>
+          </div>
+        </div>
 
-    <!-- PAGE 4: PRIVACY & CRYPTO -->
-    <section id="page-priv" class="page">
-      <div style="padding:28px 0 18px;">
-        <span class="tag">CRYPTOGRAPHIC PRIVACY</span>
-        <h1 style="font-size:40px; font-weight:900; letter-spacing:-0.04em; margin-bottom:10px;">Privacy Engine &amp; <span style="color:var(--amber-dark);">Zero-Leakage Schemas</span></h1>
-        <p style="color:var(--slate); max-width:700px;">Five layers of verifiable cryptographic and statistical privacy with zero cross-silo raw data movement.</p>
-      </div>
-      <div class="grid-2">
-        <div class="card" style="border-top:4px solid #0f172a;">
-          <h3>Opacus Per-Sample DP-SGD &amp; Tight Rényi DP</h3>
-          <p style="font-size:14px; color:var(--slate);">Clips per-record gradients via Opacus <code>GradSampleModule</code> and composes Poisson-subsampled Gaussian Rényi orders &alpha; &in; [1.25, 128], achieving formal &epsilon;_RDP &le; 9.5 (&delta; = 10⁻⁵) alongside Warner's Randomized Response Local DP and Laplace MIA logit perturbation.</p>
+        <div class="table-shell">
+          <table>
+            <thead>
+              <tr><th>Capability</th><th>Cloud SIEM / EDR</th><th>Static IOC Feeds</th><th>Vanilla FedAvg</th><th>Qelvari v2.5</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Raw Telemetry Movement</strong></td><td>Uploaded to vendor cloud</td><td>Manual indicator lists</td><td>0 bytes (central scaler leak)</td><td><strong>0 bytes (Additive Silo Sufficient Stats)</strong></td></tr>
+              <tr><td><strong>Formal Differential Privacy</strong></td><td>Vendor policy trust</td><td>Manual redaction</td><td>Vulnerable to DLG inversion</td><td><strong>Opacus Per-Sample RDP + Energy-Conserving Top-k</strong></td></tr>
+              <tr><td><strong>Byzantine Poisoning Resilience</strong></td><td>Central vendor rules</td><td>None</td><td>0% (1 rogue silo breaks model)</td><td><strong>Head-Aware Multi-Krum, FLAME, FLTrust &amp; Reputation</strong></td></tr>
+              <tr><td><strong>Verifiable Secure Aggregation</strong></td><td>Not applicable</td><td>Not applicable</td><td>Mask failure if node dropped</td><td><strong>Homomorphic Pedersen + Drop-Resilient SecAgg+</strong></td></tr>
+              <tr><td><strong>Forensic Auditability</strong></td><td>Proprietary vendor logs</td><td>Static advisories</td><td>None</td><td><strong>SHA-256 Merkle Chain + Live .pt SOC Scanner</strong></td></tr>
+            </tbody>
+          </table>
         </div>
-        <div class="card" style="border-top:4px solid var(--amber-dark);">
-          <h3>Drop-Resilient SecAgg+ &amp; Homomorphic Pedersen</h3>
-          <p style="font-size:14px; color:var(--slate);">Pairs add +s_ij and -s_ij; when Byzantine silos are rejected, surviving peers cancel only dropped mask shares. Verifies SHA-256 bindings and RFC 3526 1536-bit discrete-log homomorphic commitments <code>C = g^v h^r mod p</code> plus optional 1024-bit Paillier HE.</p>
-        </div>
-        <div class="card" style="border-top:4px solid var(--green);">
-          <h3>UNSW-NB15 Schema (42 Features, 10 Classes)</h3>
-          <p style="font-size:13.5px; color:var(--slate); margin-bottom:10px;">Supports automatic real CSV ingestion and multi-class attribution across all 9 attack families plus Normal.</p>
-          <div id="tags-unsw" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
-        </div>
-        <div class="card" style="border-top:4px solid var(--blue);">
-          <h3>CICIDS2017 Official CICFlowMeter Schema (78 Features, 15 Classes)</h3>
-          <p style="font-size:13.5px; color:var(--slate); margin-bottom:10px;">Uses all 78 official CICFlowMeter headers and automatically normalizes real ISCX <code>*.pcap_ISCX.csv</code> exports.</p>
-          <div id="tags-cicids" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+
+        <div class="oss-banner">
+          <div>
+            <span class="badge badge-ok" style="margin-bottom:10px;">OPEN RESEARCH &amp; CONTRIBUTIONS</span>
+            <h3>Built in the open for security researchers &amp; ML engineers</h3>
+            <p>Qelvari is open-source under Apache 2.0. Benchmark new Byzantine aggregation defenses, test gradient-inversion red-team attacks, add IoT/5G flow schemas, or audit our cryptographic primitives on GitHub.</p>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:10px;">
+            <a class="btn-pill btn-solid" href="https://github.com/0xxay/AEGIS-FL" target="_blank" rel="noopener">Open GitHub Repository</a>
+            <a class="btn-pill btn-ghost" href="https://github.com/0xxay/AEGIS-FL/issues/new/choose" target="_blank" rel="noopener">Propose RFC / Issue</a>
+          </div>
         </div>
       </div>
     </section>
-
-    <!-- PAGE 5: RESEARCH & SOTA -->
-    <section id="page-res" class="page">
-      <div style="padding:28px 0 18px;">
-        <span class="tag">ACADEMIC SOTA &amp; INDUSTRY RESEARCH</span>
-        <h1 style="font-size:40px; font-weight:900; letter-spacing:-0.04em; margin-bottom:10px;">State of the Art vs. <span style="color:var(--amber-dark);">AEGIS-FL Architecture</span></h1>
-        <p style="color:var(--slate); max-width:760px;">Comparing commercial centralized EDR/SIEM clouds, static IOC threat feeds, early federated learning literature, and AEGIS-FL's 5 architectural innovations.</p>
-      </div>
-
-      <div class="grid-3">
-        <div class="card" style="border-top:4px solid #d97706;">
-          <h3>☁️ Commercial Cloud EDR / SIEM</h3>
-          <p style="font-size:12px; font-weight:800; color:#d97706; margin-bottom:8px;">CROWDSTRIKE &bull; SENTINELONE &bull; SPLUNK</p>
-          <p style="font-size:13.5px; color:var(--slate);">Requires streaming gigabytes of sensitive NetFlow and endpoint telemetry into vendor clouds, triggering GDPR/HIPAA residency friction and centralized honeypot risk.</p>
-        </div>
-        <div class="card" style="border-top:4px solid var(--red);">
-          <h3>📡 Static IOC Threat Feeds</h3>
-          <p style="font-size:12px; font-weight:800; color:var(--red); margin-bottom:8px;">FS-ISAC &bull; MITRE &bull; STIX / TAXII</p>
-          <p style="font-size:13.5px; color:var(--slate);">Manual post-incident sharing of static IPs and hashes—arrives hours or days after compromise and fails against zero-day polymorphic attacks.</p>
-        </div>
-        <div class="card" style="border-top:4px solid var(--red);">
-          <h3>📖 Early Federated Learning</h3>
-          <p style="font-size:12px; font-weight:800; color:var(--red); margin-bottom:8px;">FEDAVG (2017) &bull; VANILLA SECAGG</p>
-          <p style="font-size:13.5px; color:var(--slate);">Suffers from the Blinded Server Dilemma: 1 poisoned silo corrupts global weights, centralized scalers leak distribution stats, and rejecting outliers breaks SecAgg masks.</p>
-        </div>
-      </div>
-
-      <div class="table-wrap" style="margin-top:24px;">
-        <table>
-          <thead><tr><th>Capability</th><th>Cloud SIEM / EDR</th><th>Static Feeds (STIX)</th><th>Early FL (FedAvg)</th><th>AEGIS-FL™ (v2.5)</th></tr></thead>
-          <tbody>
-            <tr><td><strong>Raw Telemetry Movement</strong></td><td>Uploaded to vendor cloud</td><td>Manual IOC text lists</td><td>0 bytes (central scaler leak)</td><td><strong>0 bytes (Zero-Leakage Silo Sufficient Stats)</strong></td></tr>
-            <tr><td><strong>Formal Privacy</strong></td><td>Vendor policy trust</td><td>Manual redaction</td><td>Loose / vulnerable to DLG</td><td><strong>Opacus Per-Sample RDP + Energy-Conserving Top-k</strong></td></tr>
-            <tr><td><strong>Byzantine Resilience</strong></td><td>Central vendor rules</td><td>None</td><td>0% (1 rogue node breaks model)</td><td><strong>Head-Aware Multi-Krum, FLAME, FLTrust &amp; Reputation</strong></td></tr>
-            <tr><td><strong>Verifiable SecAgg</strong></td><td>N/A</td><td>N/A</td><td>Mask blowup if client dropped</td><td><strong>Homomorphic Pedersen + Drop-Resilient SecAgg+</strong></td></tr>
-            <tr><td><strong>Forensic Auditability</strong></td><td>Proprietary cloud logs</td><td>Static bulletins</td><td>None</td><td><strong>Immutable SHA-256 Merkle Chain + Live .pt Scanner</strong></td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="callout-dark">
-        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-          <span style="font-size:30px;">🌐</span>
-          <span class="pill" style="background:var(--amber); color:#0f172a;">OPEN RESEARCH INITIATIVE</span>
-          <span class="pill" style="background:rgba(255,255,255,0.14); color:#fff;">PEER REVIEW &bull; RFC OPEN</span>
-        </div>
-        <h2>Hey everyone! I'm actively working on this project, and I would love to add your contributions, ideas, and input into it!</h2>
-        <p>I am developing <strong>AEGIS-FL™ (PPFL-IDS)</strong> as a fully open-source, privacy-preserving cyber defense framework so that researchers, cybersecurity analysts, engineers, and academic institutions worldwide can review our architecture, run reproducible benchmarks, test novel Byzantine defenses, and contribute their expertise. All pull requests, algorithm proposals, and security audits are warmly welcomed!</p>
-        <div class="cta-row">
-          <a class="cta-link" style="background:var(--amber); color:#0f172a;" href="https://github.com/0xxay/AEGIS-FL" target="_blank" rel="noopener">💻 Open GitHub Repository</a>
-          <a class="cta-link" style="background:rgba(255,255,255,0.14); color:#fff; border:1px solid rgba(255,255,255,0.25);" href="https://github.com/0xxay/AEGIS-FL#readme" target="_blank" rel="noopener">📄 Read Architecture Docs</a>
-          <a class="cta-link" style="background:rgba(250,204,21,0.12); color:var(--amber); border:1px solid rgba(250,204,21,0.35);" href="https://github.com/0xxay/AEGIS-FL/issues/new/choose" target="_blank" rel="noopener">⚡ Submit Research Input / RFC</a>
-        </div>
-      </div>
-    </section>
-
-    <footer>
-      <div style="font-size:18px; font-weight:900; color:var(--ink);">AEGIS-FL<sup style="color:var(--amber-dark);">™</sup></div>
-      <div style="margin-top:6px;">The Sovereign Cyber Collective &bull; Apache 2.0 Open Source &bull; Opacus RDP &bull; Drop-Resilient SecAgg+ &bull; Deployed on Vercel Fluid Compute</div>
-    </footer>
   </main>
 
-  <script>
-    let accChart = null, lossChart = null, lastScanRows = [];
+  <footer>
+    <div class="wrap foot-inner">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <img src="/qelvari-logo.png" alt="" width="24" height="24" style="border-radius:6px;" />
+        <strong class="brand-word" style="color:var(--ink); font-size:16px;">Qelvari</strong>
+        <span>· Privacy-Preserving Federated Intrusion Detection</span>
+      </div>
+      <div class="mono" style="font-size:12px;">
+        Apache 2.0 · Opacus RDP · SecAgg+ · <a href="/Qelvari_User_Guide.pdf" target="_blank" rel="noopener">User Guide PDF</a>
+      </div>
+    </div>
+  </footer>
 
-    function switchTab(id, btn) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById('page-' + id).classList.add('active');
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  <script>
+    let accChart = null, lossChart = null, lastScanRows = [], lastStateData = null;
+    let scene3d = { boosting: false, paused: false, badIndex: -1, updateTheme: null, syncNodes: null };
+
+    const NODE_ICONS = [
+      '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 2 7 22 7 12 2"/><line x1="6" y1="7" x2="6" y2="17"/><line x1="10" y1="7" x2="10" y2="17"/><line x1="14" y1="7" x2="14" y2="17"/><line x1="18" y1="7" x2="18" y2="17"/><rect x="3" y="17" width="18" height="4" rx="1"/></svg>',
+      '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8v8M8 12h8"/></svg>',
+      '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="6" rx="1.5"/><rect x="2" y="13" width="20" height="6" rx="1.5"/><circle cx="6" cy="6" r="1" fill="currentColor"/><circle cx="6" cy="16" r="1" fill="currentColor"/></svg>',
+      '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>',
+      '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>'
+    ];
+
+    const SILO_NAME_MAP = {
+      'Client 0': 'Client 1 - Bank',
+      'Client 1': 'Client 2 - Hospital',
+      'Client 2': 'Client 3 - Enterprise',
+      'Client 3': 'Client 4 - Government',
+      'Client 4': 'Client 5 - Cloud Provider'
+    };
+
+    function applySavedTheme() {
+      const saved = localStorage.getItem('qelvari-theme');
+      if (saved === 'light' || saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', saved);
+      }
+      updateThemeIcon();
+    }
+
+    function toggleTheme() {
+      const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('qelvari-theme', next);
+      updateThemeIcon();
+      if (scene3d.updateTheme) scene3d.updateTheme(next);
+      if (lastStateData) renderCharts(lastStateData.history || []);
+    }
+
+    function updateThemeIcon() {
+      const isDark = (document.documentElement.getAttribute('data-theme') || 'dark') === 'dark';
+      const btn = document.getElementById('theme-toggle');
+      btn.innerHTML = isDark
+        ? '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>'
+        : '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+    }
+
+    function switchView(id, btn) {
+      document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
+      const target = document.getElementById('view-' + id);
+      if (target) target.classList.add('active');
+      document.querySelectorAll('.topbar .nav-btn').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-view') === id);
+      });
       if (btn) btn.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function focusWorkbench() {
+      switchView('overview');
+      const body = document.getElementById('wb-body');
+      body.classList.remove('collapsed');
+      document.getElementById('wb-toggle-lbl').textContent = 'Collapse Parameters';
+      setTimeout(() => {
+        document.getElementById('workbench').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 60);
+    }
+
+    function toggleWorkbench() {
+      const body = document.getElementById('wb-body');
+      const collapsed = body.classList.toggle('collapsed');
+      document.getElementById('wb-toggle-lbl').textContent = collapsed ? 'Expand Parameters' : 'Collapse Parameters';
     }
 
     function showToast(msg, isErr = false) {
@@ -577,141 +1336,218 @@
       el.textContent = msg;
       el.className = isErr ? 'toast err' : 'toast';
       el.style.display = 'block';
-      setTimeout(() => { el.style.display = 'none'; }, 7000);
+      clearTimeout(el._t);
+      el._t = setTimeout(() => { el.style.display = 'none'; }, 6500);
     }
 
     function pct(v) { return (Number(v || 0) * 100).toFixed(2) + '%'; }
 
-    function renderState(data) {
-      const L = data.latest || {};
-      const eps = Number(L.rdp_epsilon || L.epsilon || 0).toFixed(2);
-      const auc = Number(L.roc_auc || L.accuracy || 0).toFixed(4);
-      const fpr = pct(L.fpr || 0);
+    function renderCharts(hist) {
+      const isDark = (document.documentElement.getAttribute('data-theme') || 'dark') === 'dark';
+      const tickCol = isDark ? '#94a8a0' : '#3d5249';
+      const gridCol = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(7,17,13,0.07)';
+      const accentCol = isDark ? '#4ade80' : '#059669';
+      const limeCol = isDark ? '#a3e635' : '#65a30d';
+      const lossCol = isDark ? '#f87171' : '#dc2626';
 
-      document.getElementById('hero-acc').textContent = pct(L.accuracy);
-      document.getElementById('hero-round').textContent = `Round ${L.round || 3} (${(data.dataset || 'unsw').toUpperCase()})`;
-      document.getElementById('hero-eps').innerHTML = `&epsilon; = ${eps}`;
-      document.getElementById('hero-auc').textContent = auc;
-      document.getElementById('hero-fpr').textContent = `False Positive Rate: ${fpr}`;
-      document.getElementById('hero-prec').textContent = pct(L.precision);
-      document.getElementById('hero-f1').textContent = `Weighted F1: ${Number(L.f1 || 0).toFixed(4)}`;
-
-      document.getElementById('k-acc').textContent = pct(L.accuracy);
-      document.getElementById('k-rnd').textContent = `Round ${L.round || 3}`;
-      document.getElementById('k-prec').textContent = pct(L.precision);
-      document.getElementById('k-rec').textContent = pct(L.recall);
-      document.getElementById('k-auc').textContent = auc;
-      document.getElementById('k-f1').textContent = `F1: ${Number(L.f1 || 0).toFixed(4)}`;
-      document.getElementById('k-fpr').textContent = fpr;
-      document.getElementById('k-eps').textContent = eps;
-
-      const dpOn = document.getElementById('cfg-dp').checked;
-      const secOn = document.getElementById('cfg-secagg').checked;
-      document.getElementById('badge-secagg').textContent = secOn ? 'SecAgg+ Unmasked' : 'SecAgg+ Off';
-      document.getElementById('badge-dp').innerHTML = dpOn ? `Opacus RDP (&epsilon;=${eps})` : 'DP Off';
-      const led = data.ledger || {};
-      const bLed = document.getElementById('badge-ledger');
-      bLed.textContent = led.valid ? `SHA-256 Ledger: Verified (${led.height} blk)` : 'Ledger: Unverified';
-      bLed.className = led.valid ? 'pill pill-blue' : 'pill pill-red';
-
-      // Silo cards (reflect actual executed run metadata rather than unsubmitted dropdown edits)
-      const atk = (L.attack_type !== undefined && L.attack_type !== '') ? L.attack_type : document.getElementById('cfg-attack').value;
-      const badCid = (L.compromised_client !== undefined && L.compromised_client !== '') ? Number(L.compromised_client) : Number(document.getElementById('cfg-badcid').value);
-      const modelTxt = String(L.model_type || document.getElementById('cfg-model').value).toUpperCase();
-      const clipVal = document.getElementById('cfg-clip').value;
-      document.getElementById('silo-grid').innerHTML = (data.silos || []).map(s => {
-        const isBad = atk !== 'none' && s.client_id === badCid;
-        return `<div class="silo ${isBad ? 'bad' : ''}">
-          <div class="silo-top">
-            <div class="silo-ico">${s.icon}</div>
-            <span class="pill ${isBad ? 'pill-red' : 'pill-green'}">${isBad ? 'COMPROMISED' : 'SECURE'}</span>
-          </div>
-          <div class="silo-name">${s.name}</div>
-          <div class="silo-sec">${s.sector}</div>
-          <div class="silo-meta">
-            <strong>Local Flows:</strong> ${Number(s.samples).toLocaleString()} (${Number(s.attack).toLocaleString()} atk)<br/>
-            <strong>Backbone:</strong> ${modelTxt}<br/>
-            <strong>Privacy:</strong> ${dpOn ? `Opacus DP (C=${clipVal})` : 'Standard SGD'}<br/>
-            <strong>Transport:</strong> ${secOn ? 'SecAgg+ + Pedersen' : 'Plain'}
-          </div>
-          <div class="silo-foot">🔒 0 raw bytes leave silo</div>
-        </div>`;
-      }).join('');
-
-      // Confusion matrix
-      const cm = data.confusion_matrix || [];
-      if (cm.length === 2 && cm[0].length === 2) {
-        document.getElementById('cm-box').innerHTML = `<table>
-          <thead><tr><th></th><th>Pred Benign</th><th>Pred Intrusion</th></tr></thead>
-          <tbody>
-            <tr><td><strong>Actual Benign</strong></td><td>${cm[0][0]}</td><td>${cm[0][1]}</td></tr>
-            <tr><td><strong>Actual Intrusion</strong></td><td>${cm[1][0]}</td><td>${cm[1][1]}</td></tr>
-          </tbody></table>`;
-      } else {
-        document.getElementById('cm-box').innerHTML = `<div style="padding:12px; font-size:12.5px;">Multi-class ${cm.length}x${cm.length} matrix computed.</div>`;
-      }
-
-      // Charts
-      const hist = data.history || [];
       const labels = hist.map(r => 'R' + r.round);
       if (accChart) accChart.destroy();
       if (lossChart) lossChart.destroy();
+
+      const baseOpts = {
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom', labels: { color: tickCol, font: { family: 'JetBrains Mono', size: 11 } } }
+        },
+        scales: {
+          x: { ticks: { color: tickCol, font: { family: 'JetBrains Mono', size: 11 } }, grid: { color: gridCol } },
+          y: { ticks: { color: tickCol, font: { family: 'JetBrains Mono', size: 11 } }, grid: { color: gridCol } }
+        }
+      };
+
       accChart = new Chart(document.getElementById('chart-acc'), {
         type: 'line',
         data: {
           labels,
           datasets: [
-            { label: 'Accuracy', data: hist.map(r => r.accuracy), borderColor: '#0f172a', backgroundColor: 'rgba(15,23,42,0.08)', tension: 0.3, borderWidth: 2.5 },
-            { label: 'F1 Score', data: hist.map(r => r.f1), borderColor: '#eab308', backgroundColor: 'rgba(234,179,8,0.1)', tension: 0.3, borderWidth: 2.5 }
+            { label: 'Accuracy', data: hist.map(r => r.accuracy), borderColor: accentCol, backgroundColor: 'rgba(74,222,128,0.10)', fill: true, tension: 0.32, borderWidth: 2.4, pointRadius: 3.5 },
+            { label: 'Weighted F1', data: hist.map(r => r.f1), borderColor: limeCol, backgroundColor: 'transparent', tension: 0.32, borderWidth: 2.2, borderDash: [4, 3], pointRadius: 3.5 }
           ]
         },
-        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        options: baseOpts
       });
+
       lossChart = new Chart(document.getElementById('chart-loss'), {
         type: 'line',
         data: {
           labels,
-          datasets: [{ label: 'Loss', data: hist.map(r => r.loss), borderColor: '#dc2626', backgroundColor: 'rgba(220,38,38,0.08)', fill: true, tension: 0.3, borderWidth: 2.5 }]
+          datasets: [
+            { label: 'Loss', data: hist.map(r => r.loss), borderColor: lossCol, backgroundColor: 'rgba(248,113,113,0.10)', fill: true, tension: 0.32, borderWidth: 2.4, pointRadius: 3.5 }
+          ]
         },
-        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        options: baseOpts
       });
+    }
+
+    function renderState(data) {
+      lastStateData = data;
+      const L = data.latest || {};
+      const eps = Number(L.rdp_epsilon || L.epsilon || 0).toFixed(2);
+      const auc = Number(L.roc_auc || L.accuracy || 0).toFixed(4);
+      const fpr = pct(L.fpr || 0);
+      const dsUpper = (data.dataset || 'unsw').toUpperCase();
+      const roundNo = L.round || 3;
+
+      document.getElementById('hero-acc').textContent = pct(L.accuracy);
+      document.getElementById('hero-eps').textContent = `ε = ${eps}`;
+      document.getElementById('hero-auc').textContent = auc;
+
+      document.getElementById('stage-round-lbl').textContent = `ROUND ${roundNo} · ${dsUpper}`;
+      document.getElementById('stage-acc').textContent = pct(L.accuracy);
+      document.getElementById('stage-prec').textContent = pct(L.precision);
+      document.getElementById('stage-def').textContent = `${L.defense_strategy || 'multi_krum'} · verified`;
+
+      document.getElementById('k-acc').textContent = pct(L.accuracy);
+      document.getElementById('k-rnd').textContent = `R${roundNo}`;
+      document.getElementById('k-prec').textContent = pct(L.precision);
+      document.getElementById('k-rec').textContent = pct(L.recall);
+      document.getElementById('k-auc').textContent = auc;
+      document.getElementById('k-f1').textContent = `Weighted F1: ${Number(L.f1 || 0).toFixed(4)}`;
+      document.getElementById('k-fpr').textContent = fpr;
+      document.getElementById('k-eps').textContent = eps;
+
+      const dpOn = L.dp_enabled !== undefined ? Boolean(L.dp_enabled) : document.getElementById('cfg-dp').checked;
+      const secOn = L.secagg_enabled !== undefined ? Boolean(L.secagg_enabled) : document.getElementById('cfg-secagg').checked;
+      const led = data.ledger || {};
+
+      document.getElementById('hero-ledger').textContent = led.valid ? `Verified (${led.height} blk)` : 'Check Required';
+      document.getElementById('chip-dp').textContent = dpOn ? `Opacus RDP (ε=${eps})` : 'Standard SGD (DP Off)';
+      document.getElementById('chip-secagg').textContent = secOn ? 'SecAgg+ Unmasked' : 'SecAgg+ Disabled';
+      document.getElementById('chip-ledger').textContent = led.valid ? `SHA-256 Intact (${led.height})` : 'Ledger Unverified';
+      document.getElementById('top-status-text').textContent = `5/5 Silos · ${dpOn ? 'RDP ε=' + eps : 'DP Off'}`;
+
+      const atk = (L.attack_type !== undefined && L.attack_type !== '') ? L.attack_type : document.getElementById('cfg-attack').value;
+      const badCid = (L.compromised_client !== undefined && L.compromised_client !== '') ? Number(L.compromised_client) : -1;
+      const activeBad = atk !== 'none' ? (badCid >= 0 ? badCid : Number(document.getElementById('cfg-badcid').value)) : -1;
+      const modelTxt = String(L.model_type || document.getElementById('cfg-model').value).toUpperCase();
+      const clipVal = document.getElementById('cfg-clip').value;
+
+      if (scene3d.syncNodes) scene3d.syncNodes(activeBad);
+
+      // Sync 5 floating orbs in hero stage
+      const orbs = document.querySelectorAll('#stage-orbs .silo-orb');
+      orbs.forEach((orb, idx) => orb.classList.toggle('compromised', idx === activeBad));
+      document.getElementById('orb-status-lbl').textContent = activeBad >= 0 ? `Silo ${activeBad + 1} Isolated` : '5/5 Honest';
+
+      // Render 5 Institutional SuperNode Cards with vector icons
+      document.getElementById('silo-grid').innerHTML = (data.silos || []).map((s, idx) => {
+        const isBad = s.client_id === activeBad;
+        return `<article class="node-card ${isBad ? 'compromised' : ''}">
+          <div>
+            <div class="node-top">
+              <div class="node-ico">${NODE_ICONS[idx % NODE_ICONS.length]}</div>
+              <span class="badge ${isBad ? 'badge-err' : 'badge-ok'}">${isBad ? 'COMPROMISED' : 'SECURE'}</span>
+            </div>
+            <div class="node-name">${s.name}</div>
+            <div class="node-sector">${s.sector}</div>
+            <div class="node-specs mono">
+              Flows: <span>${Number(s.samples).toLocaleString()}</span> (${Number(s.attack).toLocaleString()} atk)<br/>
+              Backbone: <span>${modelTxt}</span><br/>
+              Privacy: <span>${dpOn ? `Opacus C=${clipVal}` : 'Standard SGD'}</span><br/>
+              Channel: <span>${secOn ? 'SecAgg+ · Pedersen' : 'Direct'}</span>
+            </div>
+          </div>
+          <div class="node-foot">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>0 raw bytes leave silo</span>
+          </div>
+        </article>`;
+      }).join('');
+
+      // Confusion Matrix
+      const cm = data.confusion_matrix || [];
+      if (cm.length === 2 && cm[0].length === 2) {
+        const tot = Math.max(1, cm[0][0] + cm[0][1] + cm[1][0] + cm[1][1]);
+        document.getElementById('cm-box').innerHTML = `
+          <div class="cm-grid">
+            <div class="cm-cell good">
+              <div class="cm-cell-lbl">True Benign (TN)</div>
+              <div class="cm-cell-val num">${cm[0][0].toLocaleString()}</div>
+              <div class="mono" style="font-size:11px; color:var(--accent);">${((cm[0][0]/tot)*100).toFixed(1)}% of test set</div>
+            </div>
+            <div class="cm-cell">
+              <div class="cm-cell-lbl">False Alarms (FP)</div>
+              <div class="cm-cell-val num">${cm[0][1].toLocaleString()}</div>
+              <div class="mono" style="font-size:11px; color:var(--ink-muted);">${((cm[0][1]/tot)*100).toFixed(1)}% of test set</div>
+            </div>
+            <div class="cm-cell">
+              <div class="cm-cell-lbl">Missed Attacks (FN)</div>
+              <div class="cm-cell-val num">${cm[1][0].toLocaleString()}</div>
+              <div class="mono" style="font-size:11px; color:var(--ink-muted);">${((cm[1][0]/tot)*100).toFixed(1)}% of test set</div>
+            </div>
+            <div class="cm-cell good">
+              <div class="cm-cell-lbl">Caught Intrusions (TP)</div>
+              <div class="cm-cell-val num">${cm[1][1].toLocaleString()}</div>
+              <div class="mono" style="font-size:11px; color:var(--accent);">${((cm[1][1]/tot)*100).toFixed(1)}% of test set</div>
+            </div>
+          </div>`;
+      } else {
+        document.getElementById('cm-box').innerHTML = `<div class="cm-cell"><div class="cm-cell-lbl">Multi-Class Attribution</div><div class="cm-cell-val mono">${cm.length} × ${cm.length} Matrix</div><p style="font-size:12px; margin-top:6px;">Evaluated across all attack families.</p></div>`;
+      }
+
+      renderCharts(data.history || []);
 
       // History Table
       const cols = ['round', 'dataset', 'model_type', 'accuracy', 'precision', 'recall', 'f1', 'roc_auc', 'fpr', 'loss', 'rdp_epsilon', 'defense_strategy', 'flagged_clients'];
-      document.querySelector('#tbl-history thead').innerHTML = '<tr>' + cols.map(c => `<th>${c.toUpperCase()}</th>`).join('') + '</tr>';
-      document.querySelector('#tbl-history tbody').innerHTML = hist.map(r => '<tr>' + cols.map(c => `<td>${r[c] !== undefined ? r[c] : '-'}</td>`).join('') + '</tr>').join('');
+      document.querySelector('#tbl-history thead').innerHTML = '<tr>' + cols.map(c => `<th>${c.replace(/_/g, ' ')}</th>`).join('') + '</tr>';
+      document.querySelector('#tbl-history tbody').innerHTML = (data.history || []).map(r => {
+        return '<tr>' + cols.map(c => {
+          let val = r[c] !== undefined ? r[c] : '-';
+          if (c === 'flagged_clients' && typeof val === 'string') {
+            val = val.replace(/\bClient [0-4]\b(?! -)/g, m => SILO_NAME_MAP[m] || m);
+          }
+          return `<td>${val}</td>`;
+        }).join('') + '</tr>';
+      }).join('');
 
-      // Defense Lab updates
-      const siloNameMap = { 'Client 0': 'Client 1 - Bank', 'Client 1': 'Client 2 - Hospital', 'Client 2': 'Client 3 - Enterprise', 'Client 3': 'Client 4 - Government', 'Client 4': 'Client 5 - Cloud Provider' };
+      // Defense Lab Verdict & Ledger
       const rawFlagged = L.flagged_clients && L.flagged_clients !== 'None' ? String(L.flagged_clients) : null;
-      const flagged = rawFlagged ? rawFlagged.replace(/\bClient [0-4]\b(?! -)/g, m => siloNameMap[m] || m) : null;
+      const flagged = rawFlagged ? rawFlagged.replace(/\bClient [0-4]\b(?! -)/g, m => SILO_NAME_MAP[m] || m) : null;
       const alertEl = document.getElementById('def-alert');
       if (flagged) {
-        alertEl.style.borderLeftColor = '#dc2626';
-        alertEl.innerHTML = `<h3 style="color:#dc2626; margin-bottom:4px;">🚨 Malicious Silo Detected &amp; Isolated (${flagged})</h3>
-          <p style="font-size:13.5px; color:var(--slate);">Rejected by <strong>${L.defense_strategy}</strong> with surviving SecAgg+ mask cancellation. Global accuracy preserved at <strong>${pct(L.accuracy)}</strong> (Backdoor ASR: <strong>${pct(L.backdoor_asr || 0)}</strong>).</p>`;
+        alertEl.className = 'verdict-banner isolated';
+        alertEl.innerHTML = `
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2" style="flex-shrink:0; margin-top:2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div>
+            <h3 style="color:var(--danger);">Adversarial Silo Isolated (${flagged})</h3>
+            <p>Filtered by <strong>${L.defense_strategy}</strong> with surviving-peer SecAgg+ mask recovery. Global accuracy maintained at <strong>${pct(L.accuracy)}</strong> (Backdoor ASR: <strong>${pct(L.backdoor_asr || 0)}</strong>).</p>
+          </div>`;
       } else {
-        alertEl.style.borderLeftColor = '#16a34a';
-        alertEl.innerHTML = `<h3 style="color:#16a34a; margin-bottom:4px;">🛡️ Consensus Integrity Verified</h3>
-          <p style="font-size:13.5px; color:var(--slate);">All participating silos passed SHA-256 + Homomorphic Pedersen commitment verification (Global Accuracy: <strong>${pct(L.accuracy)}</strong>).</p>`;
+        alertEl.className = 'verdict-banner';
+        alertEl.innerHTML = `
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" style="flex-shrink:0; margin-top:2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+          <div>
+            <h3 style="color:var(--accent);">Byzantine Consensus Verified</h3>
+            <p>All 5 participating institutional silos passed SHA-256 binding and RFC 3526 discrete-log homomorphic Pedersen verification (Global Accuracy: <strong>${pct(L.accuracy)}</strong>).</p>
+          </div>`;
       }
 
       const lb = led.latest_block || {};
       document.getElementById('ledger-code').textContent = lb.block_hash
-        ? `Chain Height: ${led.height} blocks | Status: ${led.message}\nCommitments Verified: ${lb.commitments_verified ?? true} | SecAgg+ Unmasked: ${lb.secagg_verified ?? true}\nLatest Block Hash: ${lb.block_hash}\nPrev Block Hash:   ${lb.prev_block_hash}`
-        : led.message || 'No audit chain found.';
+        ? `Chain Height         : ${led.height} blocks (${led.message})\nCommitments Verified : ${lb.commitments_verified ?? true}   |   SecAgg+ Unmasked : ${lb.secagg_verified ?? true}\nLatest Block SHA-256 : ${lb.block_hash}\nParent Block SHA-256 : ${lb.prev_block_hash}`
+        : (led.message || 'No audit chain blocks recorded yet.');
 
       document.getElementById('def-matrix-body').innerHTML = `
-        <tr style="background:#fef9c3;"><td><strong>Live Session Result</strong></td><td>${L.attack_type || 'none'}</td><td>${L.defense_strategy || 'multi_krum'}</td><td><strong>${pct(L.accuracy)}</strong></td><td>${pct(L.precision)}</td><td>${flagged || 'None'}</td></tr>
+        <tr style="background:var(--accent-soft);"><td><strong>Active Session Result</strong></td><td>${L.attack_type || 'none'}</td><td>${L.defense_strategy || 'multi_krum'}</td><td><strong>${pct(L.accuracy)}</strong></td><td>${pct(L.precision)}</td><td>${flagged || 'None'}</td></tr>
         <tr><td>Honest Baseline (Opacus RDP + SecAgg+)</td><td>none</td><td>multi_krum</td><td>91.93%</td><td>91.99%</td><td>None</td></tr>
-        <tr><td>Model Scaling (-25x) — Undefended</td><td>model_scaling</td><td>fedavg</td><td>40.29% (Collapsed)</td><td>16.23%</td><td>None (Breach)</td></tr>
-        <tr><td>Model Scaling (-25x) + Multi-Krum</td><td>model_scaling</td><td>multi_krum</td><td>91.78% (Protected)</td><td>91.84%</td><td>Client 3 - Enterprise</td></tr>
-        <tr><td>Stealth Norm-Bounded Poisoning + Head Guard</td><td>adaptive_poisoning</td><td>norm_clipping</td><td>91.64% (Protected)</td><td>91.71%</td><td>Client 3 - Enterprise</td></tr>
-        <tr><td>Data Poisoning (Label Flip) + FLAME</td><td>label_flipping</td><td>flame</td><td>91.93% (Protected)</td><td>91.99%</td><td>Client 3 - Enterprise</td></tr>`;
+        <tr><td>Model Scaling (-25x) · Undefended</td><td>model_scaling</td><td>fedavg</td><td>40.29% (Collapsed)</td><td>16.23%</td><td>None (Breach)</td></tr>
+        <tr><td>Model Scaling (-25x) · Multi-Krum</td><td>model_scaling</td><td>multi_krum</td><td>91.78% (Protected)</td><td>91.84%</td><td>Client 3 - Enterprise</td></tr>
+        <tr><td>Stealth Norm-Bounded · Head Guard</td><td>adaptive_poisoning</td><td>norm_clipping</td><td>91.64% (Protected)</td><td>91.71%</td><td>Client 3 - Enterprise</td></tr>
+        <tr><td>Data Poisoning (Label Flip) · FLAME</td><td>label_flipping</td><td>flame</td><td>91.93% (Protected)</td><td>91.99%</td><td>Client 3 - Enterprise</td></tr>`;
 
       if (data.schemas) {
-        document.getElementById('tags-unsw').innerHTML = data.schemas.unsw_classes.map(c => `<span class="pill pill-amber">${c}</span>`).join('');
-        document.getElementById('tags-cicids').innerHTML = data.schemas.cicids_classes.map(c => `<span class="pill pill-blue">${c}</span>`).join('');
+        document.getElementById('tags-unsw').innerHTML = data.schemas.unsw_classes.map(c => `<span class="badge badge-ok">${c}</span>`).join('');
+        document.getElementById('tags-cicids').innerHTML = data.schemas.cicids_classes.map(c => `<span class="badge badge-neutral">${c}</span>`).join('');
       }
     }
 
@@ -721,14 +1557,21 @@
         const data = await res.json();
         renderState(data);
       } catch (e) {
-        showToast('Failed to load telemetry: ' + e.message, true);
+        showToast('Telemetry fetch failed: ' + e.message, true);
       }
     }
 
     async function runFederation() {
       const btn = document.getElementById('btn-run');
+      const note = document.getElementById('run-timer-note');
       btn.disabled = true;
-      btn.textContent = '⏳ Training 5 Silos (Opacus + SecAgg+)...';
+      scene3d.boosting = true;
+      const t0 = performance.now();
+      const tick = setInterval(() => {
+        const sec = ((performance.now() - t0) / 1000).toFixed(1);
+        btn.textContent = `Training 5 Silos · ${sec}s`;
+      }, 100);
+
       try {
         const body = {
           dataset_name: document.getElementById('cfg-dataset').value,
@@ -752,26 +1595,64 @@
         if (!res.ok) throw new Error(await res.text());
         const data = await res.json();
         renderState(data);
+        const elapsed = ((performance.now() - t0) / 1000).toFixed(2);
         const L = data.latest;
-        showToast(`Federation complete! Accuracy: ${pct(L.accuracy)} | Precision: ${pct(L.precision)} | ROC-AUC: ${Number(L.roc_auc).toFixed(4)} | Tight RDP ε: ${Number(L.rdp_epsilon).toFixed(2)}`);
+        note.textContent = `Last run completed in ${elapsed}s · Accuracy ${pct(L.accuracy)}`;
+        showToast(`Consensus complete in ${elapsed}s · Accuracy ${pct(L.accuracy)} · RDP ε=${Number(L.rdp_epsilon).toFixed(2)}`);
       } catch (e) {
-        showToast('Experiment error: ' + e.message, true);
+        showToast('Federation error: ' + e.message, true);
       } finally {
+        clearInterval(tick);
+        scene3d.boosting = false;
         btn.disabled = false;
-        btn.textContent = '▶ Run Federation Experiment';
+        btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg> Run Federation Experiment';
       }
     }
 
     async function verifyLedger() {
-      const res = await fetch('/api/verify-ledger');
-      const d = await res.json();
-      showToast(d.message, !d.valid);
+      try {
+        const res = await fetch('/api/verify-ledger');
+        const d = await res.json();
+        showToast(d.message, !d.valid);
+      } catch (e) {
+        showToast('Verification request failed: ' + e.message, true);
+      }
+    }
+
+    function drawScanRows(rows) {
+      const cols = ['Flow_Index', 'Verdict', 'Predicted_Class', 'Threat_Confidence', 'Primary_Anomaly_Signal'];
+      document.querySelector('#tbl-scan thead').innerHTML = '<tr>' + cols.map(c => `<th>${c.replace(/_/g, ' ')}</th>`).join('') + '</tr>';
+      document.querySelector('#tbl-scan tbody').innerHTML = rows.map(r => {
+        const isAtk = r.Verdict === 'INTRUSION';
+        const badge = isAtk ? '<span class="badge badge-err">INTRUSION</span>' : '<span class="badge badge-ok">BENIGN</span>';
+        const conf = Number(r.Threat_Confidence || 0);
+        const w = Math.min(100, Math.max(4, Math.round(conf * 100)));
+        return `<tr class="mono">
+          <td>#${r.Flow_Index}</td>
+          <td>${badge}</td>
+          <td style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:600;">${r.Predicted_Class}</td>
+          <td>
+            <div class="conf-wrap">
+              <span>${conf.toFixed(4)}</span>
+              <span class="conf-bar"><span class="conf-fill ${isAtk ? 'high-risk' : ''}" style="width:${w}%"></span></span>
+            </div>
+          </td>
+          <td><code>${r.Primary_Anomaly_Signal}</code></td>
+        </tr>`;
+      }).join('');
+    }
+
+    function filterScanRows(mode, btn) {
+      document.querySelectorAll('#scan-filter-bar .nav-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      const filtered = mode === 'ALL' ? lastScanRows : lastScanRows.filter(r => r.Verdict === mode);
+      drawScanRows(filtered);
     }
 
     async function runFlowScan() {
       const btn = document.getElementById('btn-scan');
       btn.disabled = true;
-      btn.textContent = '⏳ Scanning Flows...';
+      btn.textContent = 'Scanning Flows...';
       try {
         const fd = new FormData();
         fd.append('dataset_name', document.getElementById('cfg-dataset').value);
@@ -786,27 +1667,23 @@
         const s = data.summary;
         lastScanRows = data.rows || [];
 
+        document.getElementById('scan-empty').style.display = 'none';
         const kpiEl = document.getElementById('scan-kpis');
         kpiEl.style.display = 'grid';
         kpiEl.innerHTML = `
-          <div class="kpi" style="border-top-color:#0f172a;"><div class="kpi-lbl">Active Checkpoint</div><div class="kpi-val">${s.model_type}</div><div class="kpi-sub">${s.dataset} (${s.num_classes} classes)</div></div>
-          <div class="kpi" style="border-top-color:#2563eb;"><div class="kpi-lbl">Flows Scanned</div><div class="kpi-val">${s.total_scanned}</div><div class="kpi-sub">Zero-Leakage Scaled</div></div>
-          <div class="kpi" style="border-top-color:#dc2626;"><div class="kpi-lbl">Intrusions Flagged</div><div class="kpi-val">${s.intrusions_flagged}</div><div class="kpi-sub">Alert Rate: ${pct(s.alert_rate)}</div></div>
-          <div class="kpi" style="border-top-color:#16a34a;"><div class="kpi-lbl">Benign Cleared</div><div class="kpi-val">${s.benign_cleared}</div><div class="kpi-sub">Mean Score: ${s.mean_confidence}</div></div>`;
+          <div class="metric-tile"><div class="metric-lbl">Active Checkpoint</div><div class="metric-val mono">${s.model_type}</div><div class="metric-sub">${s.dataset} (${s.num_classes} classes)</div></div>
+          <div class="metric-tile"><div class="metric-lbl">Flows Evaluated</div><div class="metric-val num">${s.total_scanned}</div><div class="metric-sub">Zero-Leakage Scaled</div></div>
+          <div class="metric-tile"><div class="metric-lbl">Intrusions Flagged</div><div class="metric-val num" style="color:var(--danger);">${s.intrusions_flagged}</div><div class="metric-sub">Alert Rate: ${pct(s.alert_rate)}</div></div>
+          <div class="metric-tile"><div class="metric-lbl">Benign Cleared</div><div class="metric-val num" style="color:var(--accent);">${s.benign_cleared}</div><div class="metric-sub">Mean Confidence: ${s.mean_confidence}</div></div>`;
 
         document.getElementById('scan-actions').style.display = 'block';
         document.getElementById('scan-table-wrap').style.display = 'block';
-        const cols = ['Flow_Index', 'Verdict', 'Predicted_Class', 'Threat_Confidence', 'Primary_Anomaly_Signal'];
-        document.querySelector('#tbl-scan thead').innerHTML = '<tr>' + cols.map(c => `<th>${c.replace(/_/g, ' ')}</th>`).join('') + '</tr>';
-        document.querySelector('#tbl-scan tbody').innerHTML = lastScanRows.map(r => {
-          const badge = r.Verdict === 'INTRUSION' ? '<span class="pill pill-red">INTRUSION</span>' : '<span class="pill pill-green">BENIGN</span>';
-          return `<tr><td>#${r.Flow_Index}</td><td>${badge}</td><td><strong>${r.Predicted_Class}</strong></td><td>${r.Threat_Confidence}</td><td><code>${r.Primary_Anomaly_Signal}</code></td></tr>`;
-        }).join('');
+        drawScanRows(lastScanRows);
       } catch (e) {
-        showToast('Scan error: ' + e.message, true);
+        showToast('Flow scan failed: ' + e.message, true);
       } finally {
         btn.disabled = false;
-        btn.textContent = '🔍 Scan Network Flows Now';
+        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Scan Network Flows';
       }
     }
 
@@ -816,10 +1693,190 @@
       const csv = [keys.join(','), ...lastScanRows.map(r => keys.map(k => `"${String(r[k]).replace(/"/g, '""')}"`).join(','))].join('\n');
       const a = document.createElement('a');
       a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-      a.download = 'aegis_fl_soc_scan_report.csv';
+      a.download = 'qelvari_soc_scan_report.csv';
       a.click();
     }
 
+    /* Three.js Interactive 3D Federated Cryptographic Lattice */
+    function initQelvari3D() {
+      const canvas = document.getElementById('qelvari-3d');
+      const stage = document.getElementById('hero-stage');
+      if (!canvas || typeof THREE === 'undefined') return;
+
+      let renderer;
+      try {
+        renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      } catch (_) {
+        return;
+      }
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+      camera.position.set(0, 0.4, 7.2);
+
+      const root = new THREE.Group();
+      scene.add(root);
+
+      const ambLight = new THREE.AmbientLight(0xffffff, 0.75);
+      scene.add(ambLight);
+      const keyLight = new THREE.PointLight(0x4ade80, 2.6, 20);
+      keyLight.position.set(4, 4, 5);
+      scene.add(keyLight);
+      const rimLight = new THREE.PointLight(0x38bdf8, 1.8, 20);
+      rimLight.position.set(-5, -3, 3);
+      scene.add(rimLight);
+
+      // Outer Consensus Wireframe Icosahedron + Inner Refractive Core
+      const shellGeo = new THREE.IcosahedronGeometry(1.55, 1);
+      const shellMat = new THREE.MeshBasicMaterial({ color: 0x4ade80, wireframe: true, transparent: true, opacity: 0.34 });
+      const shellMesh = new THREE.Mesh(shellGeo, shellMat);
+      root.add(shellMesh);
+
+      const coreGeo = new THREE.OctahedronGeometry(0.86, 0);
+      const coreMat = new THREE.MeshStandardMaterial({
+        color: 0x10b981, emissive: 0x064e3b, metalness: 0.55, roughness: 0.22, flatShading: true
+      });
+      const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+      root.add(coreMesh);
+
+      // Two Interlocking Orbital Rings (matching Qelvari logo geometry)
+      const ringGeo = new THREE.TorusGeometry(2.45, 0.018, 12, 96);
+      const ringMat = new THREE.MeshBasicMaterial({ color: 0xa3e635, transparent: true, opacity: 0.38 });
+      const ringA = new THREE.Mesh(ringGeo, ringMat);
+      ringA.rotation.set(1.12, 0.42, 0);
+      const ringB = new THREE.Mesh(ringGeo, ringMat.clone());
+      ringB.rotation.set(1.12, -0.48, 0.5);
+      root.add(ringA, ringB);
+
+      // 5 Orbiting Institutional Silo Polyhedra
+      const siloMeshes = [];
+      for (let i = 0; i < 5; i++) {
+        const g = new THREE.OctahedronGeometry(0.19, 0);
+        const m = new THREE.MeshStandardMaterial({
+          color: 0x4ade80, emissive: 0x166534, metalness: 0.3, roughness: 0.3, flatShading: true
+        });
+        const mesh = new THREE.Mesh(g, m);
+        root.add(mesh);
+        siloMeshes.push(mesh);
+      }
+
+      // Encrypted Gradient Pulse Particles Flowing to Consensus Core
+      const pulseCount = 45;
+      const pulsePos = new Float32Array(pulseCount * 3);
+      const pulseProg = new Float32Array(pulseCount);
+      for (let i = 0; i < pulseCount; i++) pulseProg[i] = Math.random();
+      const pulseGeo = new THREE.BufferGeometry();
+      pulseGeo.setAttribute('position', new THREE.BufferAttribute(pulsePos, 3));
+      const pulseMat = new THREE.PointsMaterial({ color: 0xa3e635, size: 0.065, transparent: true, opacity: 0.85 });
+      const pulses = new THREE.Points(pulseGeo, pulseMat);
+      root.add(pulses);
+
+      scene3d.syncNodes = (badIdx) => {
+        scene3d.badIndex = badIdx;
+        siloMeshes.forEach((m, idx) => {
+          if (idx === badIdx) {
+            m.material.color.setHex(0xf87171);
+            m.material.emissive.setHex(0x991b1b);
+            m.scale.setScalar(1.35);
+          } else {
+            m.material.color.setHex(0x4ade80);
+            m.material.emissive.setHex(0x166534);
+            m.scale.setScalar(1.0);
+          }
+        });
+      };
+
+      scene3d.updateTheme = (theme) => {
+        const isDark = theme === 'dark';
+        shellMat.color.setHex(isDark ? 0x4ade80 : 0x059669);
+        shellMat.opacity = isDark ? 0.34 : 0.28;
+        ringMat.color.setHex(isDark ? 0xa3e635 : 0x059669);
+      };
+      scene3d.updateTheme(document.documentElement.getAttribute('data-theme') || 'dark');
+
+      function resize() {
+        const w = stage.clientWidth || 520;
+        const h = stage.clientHeight || 480;
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      // Subtle Interactive Pointer Tilt on both 3D Lattice & Floating Rig
+      let targetX = 0, targetY = 0;
+      const rig = document.getElementById('stage-rig');
+      stage.addEventListener('pointermove', (e) => {
+        if (scene3d.paused) return;
+        const rect = stage.getBoundingClientRect();
+        const nx = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+        const ny = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+        targetY = nx * 0.42;
+        targetX = ny * 0.26;
+        if (rig && window.innerWidth > 760) {
+          rig.style.transform = `rotateY(${-11 + nx * 5.5}deg) rotateX(${5 - ny * 4.5}deg)`;
+        }
+      });
+      stage.addEventListener('pointerleave', () => {
+        targetX = 0; targetY = 0;
+        if (rig && window.innerWidth > 760) rig.style.transform = 'rotateY(-11deg) rotateX(5deg)';
+      });
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        scene3d.paused = true;
+        document.getElementById('btn-3d-pause').textContent = 'Resume 3D';
+      }
+
+      let clock = 0;
+      function animate() {
+        requestAnimationFrame(animate);
+        if (!scene3d.paused) {
+          const speed = scene3d.boosting ? 0.036 : 0.009;
+          clock += speed;
+          shellMesh.rotation.y += speed * 0.8;
+          shellMesh.rotation.x += speed * 0.35;
+          coreMesh.rotation.y -= speed * 1.25;
+          coreMesh.rotation.z += speed * 0.5;
+          root.rotation.y += (targetY - root.rotation.y) * 0.06;
+          root.rotation.x += (targetX - root.rotation.x) * 0.06;
+
+          for (let i = 0; i < 5; i++) {
+            const ang = clock * 0.9 + (i * Math.PI * 2) / 5;
+            const rad = 2.45;
+            const sx = Math.cos(ang) * rad;
+            const sy = Math.sin(ang) * 0.85;
+            const sz = Math.sin(ang) * 1.65;
+            siloMeshes[i].position.set(sx, sy, sz);
+            siloMeshes[i].rotation.y += 0.02;
+          }
+
+          const arr = pulseGeo.attributes.position.array;
+          for (let i = 0; i < pulseCount; i++) {
+            const nodeIdx = i % 5;
+            pulseProg[i] += scene3d.boosting ? 0.028 : 0.011;
+            if (pulseProg[i] > 1) pulseProg[i] = 0;
+            const t = (nodeIdx === scene3d.badIndex && pulseProg[i] > 0.45) ? 0.45 : pulseProg[i];
+            const nPos = siloMeshes[nodeIdx].position;
+            arr[i * 3] = nPos.x * (1 - t);
+            arr[i * 3 + 1] = nPos.y * (1 - t);
+            arr[i * 3 + 2] = nPos.z * (1 - t);
+          }
+          pulseGeo.attributes.position.needsUpdate = true;
+        }
+        renderer.render(scene, camera);
+      }
+      animate();
+    }
+
+    function toggle3DMotion() {
+      scene3d.paused = !scene3d.paused;
+      document.getElementById('btn-3d-pause').textContent = scene3d.paused ? 'Resume 3D' : 'Pause 3D';
+    }
+
+    applySavedTheme();
+    initQelvari3D();
     loadState('unsw');
   </script>
 </body>

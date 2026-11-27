@@ -1,1 +1,1 @@
-"""AEGIS-FL FastAPI Web Application Package for Vercel Fluid Compute."""
+"""Qelvari FastAPI Web Application Package for Vercel Fluid Compute."""

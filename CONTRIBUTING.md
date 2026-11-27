@@ -1,6 +1,6 @@
-# Contributing to AEGIS-FL (PPFL-IDS)
+# Contributing to Qelvari
 
-Thank you for your interest in contributing to AEGIS-FL! We welcome researchers, engineers, and practitioners to review the architecture, conduct security audits, and propose new algorithms.
+Thank you for your interest in contributing to Qelvari! We welcome researchers, engineers, and practitioners to review the architecture, conduct security audits, and propose new algorithms.
 
 ---
 

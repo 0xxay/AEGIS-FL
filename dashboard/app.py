@@ -22,7 +22,7 @@ from src.server import CentralFederatedServer
 
 
 st.set_page_config(
-    page_title="AEGIS-FL™ - Privacy-Preserving Federated Intrusion Detection System",
+    page_title="Qelvari — Privacy-Preserving Federated Intrusion Detection System",
     page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -584,8 +584,8 @@ st.markdown(f"""
 <div class="sy-navbar">
     <div class="sy-logo">
         <span style="font-size: 28px;">🛡️</span>
-        <span class="sy-logo-text">AEGIS-FL<span class="tm">™</span></span>
-        <span style="font-size: 12px; font-weight: 600; color: #64748b; margin-left: 8px; padding-left: 12px; border-left: 1px solid #e5e7eb;">PPFL-IDS &bull; Sovereign Cyber Collective</span>
+        <span class="sy-logo-text">Qelvari</span>
+        <span style="font-size: 12px; font-weight: 600; color: #64748b; margin-left: 8px; padding-left: 12px; border-left: 1px solid #e5e7eb;">Federated Intrusion Detection Mesh</span>
     </div>
     <div class="sy-nav-links">
         <span class="sy-badge green" style="font-size: 11px; padding: 6px 12px;">&#9679; 5 Silos Ready</span>
@@ -872,7 +872,7 @@ elif st.session_state.active_page == "Live Flow Scanner":
             st.download_button(
                 "Download SOC Intrusion Report (CSV)",
                 data=verdicts_df.to_csv(index=False).encode("utf-8"),
-                file_name="aegis_fl_soc_scan_report.csv",
+                file_name="qelvari_soc_scan_report.csv",
                 mime="text/csv",
             )
         except Exception as exc:
@@ -1131,10 +1131,10 @@ elif st.session_state.active_page == "Research & SOTA":
     <div style="padding: 40px 0 20px 0;">
         <div class="sy-hero-tag">ACADEMIC SOTA & INDUSTRY RESEARCH</div>
         <h1 style="font-size: 42px !important; font-weight: 900 !important; letter-spacing: -0.04em !important; color: #1a1a2e !important; line-height: 1.1 !important; margin: 0 0 12px 0 !important;">
-            State of the Art vs.<br><span style="color: #eab308;">AEGIS-FL Architecture</span>
+            State of the Art vs.<br><span style="color: #10b981;">Qelvari Architecture</span>
         </h1>
         <p style="font-size: 16px; color: #64748b; max-width: 760px; line-height: 1.65;">
-            How AEGIS-FL bridges the gap between centralized cloud SIEM/EDR data lakes, static IOC feeds, and unverified early federated learning.
+            How Qelvari bridges the gap between centralized cloud SIEM/EDR data lakes, static IOC feeds, and unverified early federated learning.
         </p>
     </div>
 
@@ -1206,7 +1206,7 @@ elif st.session_state.active_page == "Research & SOTA":
             <strong>Hey everyone! I'm actively working on this project, and I would love to add your contributions, ideas, and input into it!</strong>
         </h2>
         <p style="font-size: 16px; color: #cbd5e1; line-height: 1.75; max-width: 950px; margin-bottom: 28px;">
-            I am developing <strong>AEGIS-FL™ (PPFL-IDS)</strong> as a fully open-source, privacy-preserving cyber defense framework so that researchers, cybersecurity analysts, engineers, and academic institutions worldwide can review our architecture, run reproducible benchmarks, test novel Byzantine defenses, and contribute their expertise. All pull requests, algorithm proposals, and security audits are warmly welcomed!
+            I am developing <strong>Qelvari</strong> as a fully open-source, privacy-preserving cyber defense framework so that researchers, cybersecurity analysts, engineers, and academic institutions worldwide can review our architecture, run reproducible benchmarks, test novel Byzantine defenses, and contribute their expertise. All pull requests, algorithm proposals, and security audits are warmly welcomed!
         </p>
         <div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: center;">
             <a href="https://github.com/0xxay/AEGIS-FL" target="_blank" style="background: #facc15; color: #0f172a; text-decoration: none; font-weight: 800; font-size: 14px; padding: 12px 28px; border-radius: 50px; display: inline-flex; align-items: center; gap: 8px;">
@@ -1225,8 +1225,8 @@ elif st.session_state.active_page == "Research & SOTA":
 
 st.markdown("""
 <div class="sy-footer">
-    <div class="sy-footer-brand">AEGIS-FL<span style="color: #facc15; font-size: 12px; vertical-align: super;">&#8482;</span></div>
-    <div class="sy-footer-sub">The Sovereign Cyber Collective &bull; PPFL-IDS Network &bull; Open Research Initiative</div>
+    <div class="sy-footer-brand">Qelvari</div>
+    <div class="sy-footer-sub">Federated Intrusion Detection Mesh &bull; Open Research Initiative</div>
     <div style="margin-top: 12px; font-size: 12px; color: #94a3b8;">Apache 2.0 Open Source &bull; Opacus RDP &bull; Flower gRPC &bull; Peer Review Welcomed</div>
 </div>
 """, unsafe_allow_html=True)

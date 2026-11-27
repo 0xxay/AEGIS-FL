@@ -1,5 +1,5 @@
 """
-privacy.py — Privacy & Cryptographic Engines for AEGIS-FL (PPFL-IDS).
+privacy.py — Privacy & Cryptographic Engines for Qelvari.
 
 Provides:
   - PrivacyEngineDP             : True Opacus per-sample DP-SGD + subsampled RDP accountant,
@@ -438,8 +438,8 @@ class PedersenCommitment:
         16,
     )
     _G = 2
-    # Nothing-up-my-sleeve independent generator h = SHA256("AEGIS-FL-PEDERSEN-H")^2 mod p (unknown discrete log base g)
-    _H = pow(int(hashlib.sha256(b"AEGIS-FL-PEDERSEN-H").hexdigest(), 16), 2, _P)
+    # Nothing-up-my-sleeve independent generator h = SHA256("QELVARI-PEDERSEN-H")^2 mod p (unknown discrete log base g)
+    _H = pow(int(hashlib.sha256(b"QELVARI-PEDERSEN-H").hexdigest(), 16), 2, _P)
     _SCALE = 10 ** 6
 
     @staticmethod

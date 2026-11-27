@@ -53,7 +53,7 @@ def run_federated_experiment(
         multiclass = False
 
     print("\n" + "=" * 80)
-    print("[START] AEGIS-FL (PPFL-IDS) FEDERATION")
+    print("[START] QELVARI FEDERATED INTRUSION DETECTION MESH")
     print(f"Dataset: {dataset_name.upper()} | Model: {model_type.upper()} | Mode: {'Multi-Class' if multiclass else 'Binary'} | Rounds: {num_rounds} | Non-IID: {non_iid}")
     print(f"Privacy: DP={dp_enabled} (Opacus={use_opacus}, C={clipping_norm}, sigma={noise_multiplier}) | SecAgg+={secagg_enabled} | PaillierHE={paillier_enabled}")
     print(f"Anti-Inversion: Sparsification={sparsify} (k={sparsity_ratio}) | Local DP={local_dp} (eps={local_dp_epsilon})")
@@ -216,7 +216,7 @@ def run_federated_experiment(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="AEGIS-FL Privacy-Preserving Federated IDS Runner")
+    parser = argparse.ArgumentParser(description="Qelvari Privacy-Preserving Federated IDS Runner")
     parser.add_argument("--dataset", type=str, default="unsw", choices=["unsw", "cicids"])
     parser.add_argument("--rounds", type=int, default=3)
     parser.add_argument("--epochs", type=int, default=2)

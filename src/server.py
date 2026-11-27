@@ -23,7 +23,7 @@ RESULTS_DIR = ROOT_DIR / "results"
 
 class CentralFederatedServer:
     """
-    Central Federated Aggregator (AEGIS-FL Coordinator).
+    Central Federated Aggregator (Qelvari Coordinator).
     Enforces:
     1. Verifiable cryptographic Pedersen commitments (both SHA-256 binding & discrete-log homomorphic sum check)
     2. Byzantine outlier screening (`norm_clipping`, `cosine_similarity`, `multi_krum`, `flame`, `reputation`, `adaptive_clipping`, `coordinate_median`, `trimmed_mean`)

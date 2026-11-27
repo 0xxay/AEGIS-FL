@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <defs>
+    <linearGradient id="qRing" x1="14" y1="14" x2="106" y2="106" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="55%" stop-color="#4ade80"/>
+      <stop offset="100%" stop-color="#a3e635"/>
+    </linearGradient>
+    <linearGradient id="qCore" x1="40" y1="36" x2="80" y2="86" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="60" cy="58" rx="40" ry="26" transform="rotate(-38 60 58)" stroke="url(#qRing)" stroke-width="7.5" stroke-linecap="round"/>
+  <ellipse cx="60" cy="58" rx="40" ry="26" transform="rotate(38 60 58)" stroke="url(#qRing)" stroke-width="7.5" stroke-linecap="round"/>
+  <circle cx="60" cy="58" r="36" stroke="url(#qRing)" stroke-width="4" stroke-opacity="0.55"/>
+  <path d="M77 77 L98 98" stroke="#a3e635" stroke-width="9" stroke-linecap="round"/>
+  <polygon points="60,36 77,47 70,77 60,84 50,77 43,47" fill="url(#qCore)"/>
+  <polyline points="43,47 60,55 77,47" stroke="#06090d" stroke-width="2.5" fill="none"/>
+  <line x1="60" y1="55" x2="60" y2="84" stroke="#06090d" stroke-width="2.5"/>
+</svg>

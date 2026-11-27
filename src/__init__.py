@@ -1,5 +1,5 @@
 """
-AEGIS-FL (PPFL-IDS) — Privacy-Preserving Federated Intrusion Detection System.
+Qelvari — Privacy-Preserving Federated Intrusion Detection System.
 """
 
 import os
@@ -18,14 +18,14 @@ def is_serverless_env() -> bool:
 def get_storage_root() -> Path:
     """
     Returns writable runtime root for `data/` and `results/`.
-    Locally and in Docker: uses repository root (`d:/ppflids`).
-    On Vercel Functions (`/var/task` read-only): uses `/tmp/aegis_fl` and seeds
+    Locally and in Docker: uses repository root.
+    On Vercel Functions (`/var/task` read-only): uses `/tmp/qelvari` and seeds
     baseline CSV/audit artifacts from bundled `results/` on cold start.
     """
     if not is_serverless_env() and os.access(PACKAGE_ROOT, os.W_OK):
         return PACKAGE_ROOT
 
-    tmp_root = Path("/tmp/aegis_fl")
+    tmp_root = Path("/tmp/qelvari")
     tmp_results = tmp_root / "results"
     if not tmp_results.exists():
         tmp_results.mkdir(parents=True, exist_ok=True)
