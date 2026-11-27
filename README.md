@@ -11,9 +11,9 @@
 [![Docker](https://img.shields.io/badge/Container-Multi--Node%20Docker-2496ed.svg)](https://www.docker.com/)
 [![Benchmark Accuracy](https://img.shields.io/badge/Accuracy-91.9%25%2B-brightgreen.svg)]()
 [![Contributions Welcome](https://img.shields.io/badge/Contributions-Welcome-orange.svg)](CONTRIBUTING.md)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/0xxay/AEGIS-FL/pulls)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/0xxay/Qelvari/pulls)
 
-**[Live Web Console (Vercel)](https://aegis-fl-ids.vercel.app)** · **[User Guide (PDF)](Qelvari_User_Guide.pdf)** · **[User Guide (Markdown)](docs/USER_GUIDE.md)** · **[Contributing](CONTRIBUTING.md)**
+**[Live Web Console (Vercel)](https://aegis-fl-ids.vercel.app)** · **[User Guide (PDF)](Qelvari_User_Guide.pdf)** · **[User Guide (Markdown)](docs/USER_GUIDE.md)** · **[Remote Agent Setup](docs/REMOTE_AGENT.md)** · **[Contributing](CONTRIBUTING.md)**
 
 ---
 
@@ -26,7 +26,7 @@
 > - **Network flow schemas**: Real UNSW-NB15, CICIDS2017 ISCX CSVs, IoT, 5G, SCADA, or PCAP telemetry adapters
 > - **Frontend & tooling**: Interactive WebGL/SOC console enhancements, Docker orchestration, and documentation
 >
-> Read the [Contributing Guidelines](CONTRIBUTING.md), review our [Security Policy](SECURITY.md), or open an [RFC / Feature Issue](https://github.com/0xxay/AEGIS-FL/issues/new/choose).
+> Read the [Contributing Guidelines](CONTRIBUTING.md), review our [Security Policy](SECURITY.md), or open an [RFC / Feature Issue](https://github.com/0xxay/Qelvari/issues/new/choose).
 
 ---
 

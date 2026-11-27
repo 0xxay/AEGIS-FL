@@ -1209,13 +1209,13 @@ elif st.session_state.active_page == "Research & SOTA":
             I am developing <strong>Qelvari</strong> as a fully open-source, privacy-preserving cyber defense framework so that researchers, cybersecurity analysts, engineers, and academic institutions worldwide can review our architecture, run reproducible benchmarks, test novel Byzantine defenses, and contribute their expertise. All pull requests, algorithm proposals, and security audits are warmly welcomed!
         </p>
         <div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: center;">
-            <a href="https://github.com/0xxay/AEGIS-FL" target="_blank" style="background: #facc15; color: #0f172a; text-decoration: none; font-weight: 800; font-size: 14px; padding: 12px 28px; border-radius: 50px; display: inline-flex; align-items: center; gap: 8px;">
+            <a href="https://github.com/0xxay/Qelvari" target="_blank" style="background: #facc15; color: #0f172a; text-decoration: none; font-weight: 800; font-size: 14px; padding: 12px 28px; border-radius: 50px; display: inline-flex; align-items: center; gap: 8px;">
                 <span>&#128187;</span> Open GitHub Repository
             </a>
-            <a href="https://github.com/0xxay/AEGIS-FL#readme" target="_blank" style="background: rgba(255,255,255,0.15); color: #ffffff; text-decoration: none; font-weight: 700; font-size: 14px; padding: 12px 28px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.25);">
+            <a href="https://github.com/0xxay/Qelvari#readme" target="_blank" style="background: rgba(255,255,255,0.15); color: #ffffff; text-decoration: none; font-weight: 700; font-size: 14px; padding: 12px 28px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.25);">
                 <span>&#128196;</span> Read Architecture Docs
             </a>
-            <a href="https://github.com/0xxay/AEGIS-FL/issues/new/choose" target="_blank" style="background: rgba(255,255,255,0.1); color: #facc15; text-decoration: none; font-weight: 700; font-size: 14px; padding: 12px 24px; border-radius: 50px; border: 1px solid rgba(250,204,21,0.3);">
+            <a href="https://github.com/0xxay/Qelvari/issues/new/choose" target="_blank" style="background: rgba(255,255,255,0.1); color: #facc15; text-decoration: none; font-weight: 700; font-size: 14px; padding: 12px 24px; border-radius: 50px; border: 1px solid rgba(250,204,21,0.3);">
                 <span>&#9889;</span> Submit Research Input / RFC
             </a>
         </div>

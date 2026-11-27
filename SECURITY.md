@@ -18,7 +18,7 @@ Security reports are welcomed across all cryptographic, privacy, and consensus s
 
 ## Reporting a Vulnerability
 
-Please **do not** open a public issue for exploitable security or cryptographic vulnerabilities. Instead, report privately via **[GitHub Private Vulnerability Reporting](https://github.com/0xxay/AEGIS-FL/security/advisories/new)**.
+Please **do not** open a public issue for exploitable security or cryptographic vulnerabilities. Instead, report privately via **[GitHub Private Vulnerability Reporting](https://github.com/0xxay/Qelvari/security/advisories/new)**.
 
 Include:
 1. Affected file(s) and function(s)
