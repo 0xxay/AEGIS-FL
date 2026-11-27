@@ -1,6 +1,6 @@
 # Qelvari User Guide
 
-- **Live Web Console:** https://aegis-fl-ids.vercel.app
+- **Live Web Console:** https://qelvari.vercel.app
 - **Downloadable PDF Guide:** [Qelvari_User_Guide.pdf](../Qelvari_User_Guide.pdf)
 - **GitHub Repository:** https://github.com/0xxay/Qelvari
 

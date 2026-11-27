@@ -13,7 +13,7 @@
 [![Contributions Welcome](https://img.shields.io/badge/Contributions-Welcome-orange.svg)](CONTRIBUTING.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/0xxay/Qelvari/pulls)
 
-**[Live Web Console (Vercel)](https://aegis-fl-ids.vercel.app)** · **[User Guide (PDF)](Qelvari_User_Guide.pdf)** · **[User Guide (Markdown)](docs/USER_GUIDE.md)** · **[Remote Agent Setup](docs/REMOTE_AGENT.md)** · **[Contributing](CONTRIBUTING.md)**
+**[Live Web Console (Vercel)](https://qelvari.vercel.app)** · **[User Guide (PDF)](Qelvari_User_Guide.pdf)** · **[User Guide (Markdown)](docs/USER_GUIDE.md)** · **[Remote Agent Setup](docs/REMOTE_AGENT.md)** · **[Contributing](CONTRIBUTING.md)**
 
 ---
 
