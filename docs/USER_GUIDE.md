@@ -1,96 +1,94 @@
-# How to Use AEGIS-FL™ (Plain-English Guide)
+# AEGIS-FL™ User Guide
 
-- **Live Website:** https://aegis-fl-ids.vercel.app
+- **Live Web App:** https://aegis-fl-ids.vercel.app
 - **Downloadable PDF Guide:** [AEGIS-FL_User_Guide.pdf](../AEGIS-FL_User_Guide.pdf)
-- **GitHub Project:** https://github.com/0xxay/AEGIS-FL
+- **GitHub Repository:** https://github.com/0xxay/AEGIS-FL
 
-## What problem does this website solve?
+## Overview
 
-Imagine five organizations: a Bank, a Hospital, an Enterprise company, a Government agency, and a Cloud provider. Each one wants an AI alarm system that spots network hackers early. Normally, training one shared AI would mean sending everyone's raw network logs to one central server, which risks leaking private customer or patient records.
-
-AEGIS-FL keeps all raw network traffic inside each building. Each organization trains an AI model on its own private data and sends out only scrambled math updates so everyone gets one stronger intrusion detector with zero raw data shared.
+AEGIS-FL enables five independent organizations (Bank, Hospital, Enterprise, Government, and Cloud) to train one shared network intrusion detector without sharing raw traffic logs. Each organization trains locally on its private network data and transmits only masked model updates to build the global detector.
 
 ```mermaid
 flowchart LR
-    A["Step 1: Open settings\nPick dataset, AI model,\nprivacy & optional attack"] --> B["Step 2: Click Run\nAll 5 silos train locally\nand combine clean updates"]
-    B --> C["Step 3: Check scores\nRead accuracy, false alarms,\ncharts & audit proof"]
-    C --> D["Step 4: Scan traffic\nTest sample flows or\nupload your own CSV"]
+    A["Step 1: Configure\nSelect dataset, model,\nprivacy & defense"] --> B["Step 2: Run Training\nAll 5 silos train locally\nand aggregate updates"]
+    B --> C["Step 3: Inspect Metrics\nReview accuracy, FPR,\ncharts & audit hashes"]
+    C --> D["Step 4: Scan Traffic\nEvaluate sample flows or\nupload a CSV file"]
 ```
 
-## 1. What the top status badges and 5 tabs do
+## 1. Status Badges and Navigation Tabs
 
-At the top right of the screen, four colored badges show the live status of the system:
+Four status indicators in the top header summarize the active federation state:
 
-| Badge on screen | What it means in plain words |
+| Status Badge | Meaning |
 | :--- | :--- |
-| **`5 Silos Ready`** | All five institutions (Bank, Hospital, Enterprise, Government, Cloud) have their local data ready. |
-| **`SecAgg+ Unmasked`** | Secret pairwise masks hid each institution's individual update during transit and canceled out cleanly when summed together. |
-| **`Opacus RDP (ε=9.53)`** | Your privacy score (`ε`, pronounced "epsilon"). Careful random noise was added so nobody can rebuild a single network record. A smaller `ε` number means stronger privacy. |
-| **`SHA-256 Ledger: Verified`** | Every training round is locked with a digital fingerprint (hash) linked to the round before it, proving past results were not edited. |
+| **`5 Silos Ready`** | All five institutions (Bank, Hospital, Enterprise, Government, Cloud) have local data partitions loaded. |
+| **`SecAgg+ Unmasked`** | Pairwise cryptographic masks protected individual client updates in transit and canceled out in the aggregate sum. |
+| **`Opacus RDP (ε=9.53)`** | Cumulative privacy budget (`ε`). Calibrated Gaussian noise prevents single-flow reconstruction; lower `ε` indicates stronger privacy. |
+| **`SHA-256 Ledger: Verified`** | Each round is recorded with a cryptographic hash linked to the previous block, verifying audit log integrity. |
 
-> [!TIP]
-> **First-click wakeup:** If nobody has visited the site in the last 5 minutes, your first click on **Run Federation Experiment** or **Scan Network Flows Now** takes about 5 to 10 seconds while the cloud server wakes up. Every click after that finishes in 2 to 5 seconds.
+> [!NOTE]
+> **Serverless Cold-Start Timing:** After 5 minutes of inactivity, the first click on **Run Federation Experiment** or **Scan Network Flows Now** takes 5 to 10 seconds while the cloud instance initializes. Subsequent runs complete in 2 to 5 seconds.
 
-### When to use each of the 5 tabs
-- **Command Center:** Check overall detection scores, the status of all 5 institutions, round-by-round progress charts, and the confusion matrix.
-- **Live Flow Scanner:** Use the trained AI model to scan a sample batch of network traffic or upload your own `.csv` file to flag intrusions.
-- **Defense Lab:** See whether a simulated hacker inside one of the institutions got caught, and verify the tamper-evident SHA-256 audit log.
-- **Privacy & Crypto:** Read how the five privacy layers work and check all supported attack categories in UNSW-NB15 and CICIDS2017.
-- **Research & SOTA:** Compare AEGIS-FL against traditional cloud security tools and open the GitHub repository to contribute or submit ideas.
+### Dashboard Tabs
+- **Command Center:** View detection metrics, institution status cards, round-by-round training curves, and the confusion matrix.
+- **Live Flow Scanner:** Run inference on a sample batch of network flows or upload a custom `.csv` file to classify intrusions.
+- **Defense Lab:** Inspect flagged adversarial silos and verify the SHA-256 hash-chained audit ledger.
+- **Privacy & Crypto:** Review active privacy mechanisms and supported attack classes for UNSW-NB15 and CICIDS2017.
+- **Research & SOTA:** Compare capabilities against centralized IDS approaches and access repository contribution links.
 
-## 2. How to customize and run a live training experiment
+## 2. Configuring and Running a Training Experiment
 
-Click the gray bar labeled **`⚙️ Experiment Configuration Panel`** near the top of the page to open the settings drawer. Adjust any options below, then click the yellow **`▶ Run Federation Experiment`** button on the right.
+Click **`⚙️ Experiment Configuration Panel`** near the top of the page to expand the settings drawer. Adjust any parameters below, then click **`▶ Run Federation Experiment`**.
 
 ### Column 1: Dataset & Backbone
-- **Benchmark Dataset:** Choose between two real-world network security formats: `UNSW-NB15` (42 traffic measurements) or `CICIDS2017` (78 traffic measurements).
-- **Neural Architecture (the AI brain):** `1D ResNet` is the strongest all-around choice; `Deep MLP` is fast and simple; `8-Token Feature Attention` compares groups of traffic features against each other; `Zero-Day Autoencoder` learns only what normal traffic looks like and flags anything unusual.
-- **Multi-Class Attack Attribution:** Turn on to name the specific attack type (such as DoS, Worms, or PortScan) instead of just Benign vs. Intrusion.
-- **Non-IID Skew:** Gives each institution an uneven mix of traffic, matching real life where a bank sees different attacks than a hospital.
+- **Benchmark Dataset:** Choose `UNSW-NB15` (42 flow features) or `CICIDS2017` (78 flow features).
+- **Neural Architecture:** `1D ResNet` provides balanced accuracy; `Deep MLP` offers fast baseline training; `8-Token Feature Attention` models cross-feature interactions; `Zero-Day Autoencoder` trains only on benign traffic to detect anomalies.
+- **Multi-Class Attack Attribution:** Predicts specific attack categories (such as DoS, Worms, or PortScan) rather than binary Benign vs. Intrusion.
+- **Non-IID Skew:** Assigns unbalanced traffic distributions across institutions to reflect heterogeneous network environments.
 
 ### Column 2: Privacy & Cryptography
-- **Opacus Per-Sample DP-SGD:** Limits how much any single network flow can change the model (`Clipping Norm C`) and adds random Gaussian noise (`σ`). Raising `σ` strengthens privacy (lowers `ε`).
-- **Drop-Resilient SecAgg+:** Masks individual updates so the central server only sees the combined total, even if a bad participant gets kicked out.
-- **Energy-Conserving Top-k (5%):** Sends only the top 5% largest weight changes (zeroing out the other 95%) so attackers cannot rebuild private inputs from gradients.
-- **Local DP:** Randomly flips a small fraction of training labels inside the institution before training even starts.
-- **Paillier HE:** Uses homomorphic encryption so the server can add encrypted output weights without decrypting them first.
+- **Opacus Per-Sample DP-SGD:** Bounds per-sample gradient sensitivity (`Clipping Norm C`) and injects Gaussian noise (`σ`). Increasing `σ` lowers `ε`.
+- **Drop-Resilient SecAgg+:** Conceals individual client updates from the server, recovering pairwise masks cleanly if a malicious client is dropped.
+- **Energy-Conserving Top-k (5%):** Transmits only the top 5% largest weight updates (zeroing the remaining 95%) to mitigate gradient inversion.
+- **Local DP:** Applies randomized label perturbation locally prior to training.
+- **Paillier HE:** Uses additive homomorphic encryption to aggregate encrypted output-layer weights.
 
 ### Column 3: Adversarial Attack (Red Team)
-- **None (All Honest):** Normal cooperative training across all 5 institutions.
-- **Model Poisoning (Scaling -25x):** One compromised institution multiplies its update by `-25` to sabotage the shared model.
-- **Stealth Adaptive Norm Poisoning:** The attacker flips its update direction to hurt accuracy while keeping its update size normal so basic size checks miss it.
-- **Data Poisoning (Label Flip):** The attacker trains on fake labels that call real cyber attacks "Benign".
-- **Targeted Backdoor Trigger:** Hides a secret pattern inside attack traffic so matching attacks slip past the alarm.
-- **Compromised Silo:** Picks which of the 5 institutions plays the attacker (its card turns red on the Command Center).
+- **None (All Honest):** Standard cooperative training across all 5 institutions.
+- **Model Poisoning (Scaling -25x):** Multiplies one compromised client's weight update by `-25` to corrupt global convergence.
+- **Stealth Adaptive Norm Poisoning:** Reverses update direction while matching honest update norms to evade basic norm thresholds.
+- **Data Poisoning (Label Flip):** Trains the compromised client on inverted labels that mark attack flows as "Benign".
+- **Targeted Backdoor Trigger:** Embeds a specific feature trigger inside attack traffic to force targeted misclassifications.
+- **Compromised Silo:** Selects which of the 5 institutions acts as the adversary.
 
 ### Column 4: Byzantine Defense (Blue Team)
-- **Multi-Krum:** Compares distances between updates and keeps only the tightest group of honest institutions.
-- **Norm + Head Sign Guard:** Rejects updates that are unusually large or point the final decision layer backward.
-- **Cosine Similarity (FLTrust):** Checks the angle of each update and blocks updates pushing in the opposite direction.
-- **FLAME:** Groups similar updates together using clustering, drops outliers, and clips update sizes.
-- **Client Reputation EMA:** Remembers how trustworthy each institution was in earlier rounds and lowers weight for suspicious ones.
-- **Median / Trimmed Mean:** Takes the middle value or trims extremes so one bad number cannot pull the average.
-- **FedAvg (No Defense):** Plain averaging with no protection (useful for seeing how badly an undefended system breaks).
+- **Multi-Krum:** Measures pairwise Euclidean distances among client updates and retains the most consistent subset.
+- **Norm + Head Sign Guard:** Bounds update norms and blocks updates whose classifier head opposes the global consensus.
+- **Cosine Similarity (FLTrust):** Evaluates angular alignment of updates and filters opposing directions.
+- **FLAME:** Clusters client updates by angular similarity, removes outliers, and applies adaptive norm clipping.
+- **Client Reputation EMA:** Tracks historical client reliability across rounds and down-weights suspicious silos.
+- **Median / Trimmed Mean:** Computes coordinate-wise robust statistics so extreme values cannot skew the global model.
+- **FedAvg (No Defense):** Unprotected weighted averaging, useful as a baseline when measuring attack impact.
 
-## 3. Understanding your scores and scanning traffic
+## 3. Evaluation Metrics and Live Flow Scanning
 
-| Metric | What it tells you in plain words |
+| Metric | Definition |
 | :--- | :--- |
-| **Accuracy** | Overall percentage of network connections labeled right (around `91% to 92%` on calibrated benchmarks). |
-| **Precision** | When AEGIS-FL raises an alarm, how often it is a real attack. High precision (above `91%`) keeps security teams free of false alarms. |
-| **Recall** | Out of all real attacks in the test set, what percentage the model caught. |
-| **ROC-AUC** | Separation score from `0.50` (coin flip) to `1.00` (perfect separation). Values above `0.91` show strong separation between benign and malicious traffic. |
-| **False Positive Rate** | Percentage of harmless connections mistakenly flagged as attacks. Lower is better. |
-| **Confusion Matrix** | A `2×2` table showing exact counts of Benign traffic cleared, Benign traffic falsely flagged, real Intrusions missed, and real Intrusions caught. |
+| **Accuracy** | Percentage of total test flows classified accurately (typically `91% to 92%` on default benchmarks). |
+| **Precision** | Proportion of raised intrusion alerts that correspond to actual attacks. |
+| **Recall** | Proportion of all actual attacks in the test set detected by the global model. |
+| **ROC-AUC** | Threshold-independent separability score from `0.50` (random) to `1.00` (ideal). |
+| **False Positive Rate** | Proportion of benign network flows misclassified as intrusions. Lower values indicate fewer false alarms. |
+| **Confusion Matrix** | `2×2` breakdown of True Negatives, False Positives, False Negatives, and True Positives. |
 
-### Scanning network flows in Tab 2 (`Live Flow Scanner`)
-1. **Without a file:** Click **Live Flow Scanner**, pick a **Sample Batch Size** (for example, `60` flows), and click **`🔍 Scan Network Flows Now`**.
-2. **With your own CSV file:** Choose any `.csv` file with UNSW-NB15 or CICIDS2017 columns (up to 4.2 MB) and click **`🔍 Scan Network Flows Now`**.
-3. **Reading each row:** Every connection shows `BENIGN` or `INTRUSION`, the predicted class name, a `Threat Confidence` score between `0` and `1`, and the `Primary Anomaly Signal` (the exact traffic measurement that stood out most, such as packet load `sload`). Click **`⬇ Download SOC Intrusion Report (CSV)`** to save the table.
+### Scanning Network Flows in Tab 2 (`Live Flow Scanner`)
+1. **Sample scan:** Open **Live Flow Scanner**, choose a **Sample Batch Size** (for example, `60` flows), and click **`🔍 Scan Network Flows Now`**.
+2. **Custom CSV upload:** Select any `.csv` file matching UNSW-NB15 or CICIDS2017 columns (up to 4.2 MB) and click **`🔍 Scan Network Flows Now`**.
+3. **Reviewing & exporting results:** Each row lists `BENIGN` or `INTRUSION`, predicted category, `Threat Confidence` (`0` to `1`), and `Primary Anomaly Signal` (the top contributing flow feature, such as `sload`). Click **`⬇ Download SOC Intrusion Report (CSV)`** to export.
 
-## 4. Four 1-minute experiments to try right now
+## 4. Example Workflows
 
-1. **Watch a hacker break an undefended system:** Open the settings panel, set **Simulate Attack Vector** to `Model Poisoning (Scaling -25x)`, set **Aggregation Defense** to `FedAvg (No Defense)`, and click **Run**. Accuracy drops from ~`92%` down to ~`40%`.
-2. **Block the same hacker automatically:** Keep the attack on `Model Poisoning` (or switch to `Data Poisoning Label Flip`), change **Aggregation Defense** to `FLAME` or `Multi-Krum`, and click **Run**. Open **Defense Lab** to see the rogue silo isolated and global accuracy restored above `91%`.
-3. **Catch attacks without using attack labels:** Set Attack back to `None`, pick `Zero-Day Autoencoder (MSE)` under Neural Architecture, uncheck `Opacus Per-Sample DP-SGD`, and click **Run**. Even though it trains only on normal traffic, it catches ~`91%` of intrusions based on abnormal reconstruction error.
-4. **Verify the audit chain and export a scan report:** Open **Defense Lab** and click **Verify Hash Chain Integrity** to confirm all round hashes match. Then open **Live Flow Scanner**, click **Scan Network Flows Now**, and click **Download SOC Intrusion Report (CSV)**.
+1. **Evaluate undefended poisoning impact:** Open the configuration panel, set **Simulate Attack Vector** to `Model Poisoning (Scaling -25x)`, set **Aggregation Defense** to `FedAvg (No Defense)`, and click **Run**. Global accuracy drops from ~`92%` to ~`40%`.
+2. **Isolate a poisoned client automatically:** Keep the attack on `Model Poisoning` (or switch to `Data Poisoning Label Flip`), set **Aggregation Defense** to `FLAME` or `Multi-Krum`, and click **Run**. Open **Defense Lab** to confirm the compromised silo is rejected and global accuracy stays above `91%`.
+3. **Detect threats without attack labels:** Set Attack back to `None`, select `Zero-Day Autoencoder (MSE)` under Neural Architecture, uncheck `Opacus Per-Sample DP-SGD`, and click **Run**. Training solely on benign flows still flags ~`91%` of intrusions via reconstruction error.
+4. **Audit ledger & export SOC report:** Open **Defense Lab** and click **Verify Hash Chain Integrity** to verify all round hashes. Then open **Live Flow Scanner**, click **Scan Network Flows Now**, and click **Download SOC Intrusion Report (CSV)**.
